@@ -1,0 +1,101 @@
+body {
+    padding-top: 50px;
+}
+
+.job-name {
+    font-size: 17px;
+}
+
+.job-start-hour {
+    font-size: 15px;
+}
+
+.job-item {
+    width: 48%;
+    float: left;
+    margin: 10px;
+    list-style-type: none;
+}
+
+.container {
+    max-width: 85%;
+}
+
+.job-item-value {
+    color: red;
+}
+
+.alert-cinza {
+    color: #bfc0bc;
+    background-color: #fcf8f7;
+    border-color: #f7fbf7;
+    color: #000000;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    border-radius: 7px;
+}
+
+.alert-cinza:hover {
+    background-color: #f2eeed;
+}
+
+.box-info {
+    min-height: 140px;
+    padding: 8px;
+}
+
+#sidebar-left, sidebar-right {
+    background-color: #999999;
+    position: fixed;
+    top: 0;
+    height: 100%;
+    width: 300px;
+    padding-top: 100px;
+    padding-left: 30px;
+}
+
+#sidebar-right {
+    right: 0;
+}
+
+#sidebar-left-pop, #sidebar-right-pop {
+    background-color: #cccccc;
+    position: fixed;
+    top: 0;
+    height: 100%;
+    width: 20px;
+}
+
+#sidebar-right-pop {
+    right: 0px;
+}
+
+#sidebar-left-pop {
+    left: 0px;
+}
+
+.open-right {
+    right: 280px !important;
+}
+
+.open-left {
+    left: 280px !important;
+}
+
+.menu-item {
+    background-color: #aaaaaa;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-right: -10px;
+    border-right: 9px black solid;
+    margin-top: 15px;
+    -moz-border-radius: 10px; /* Para Firefox */
+    -webkit-border-radius: 10px; /*Para Safari e Chrome */
+    border-radius: 10px; /* Para Opera 10.5+*/
+}
+
+.menu-item:hover {
+    background-color: lightgreen;
+}

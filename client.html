@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="./bootstrap/assets/ico/favicon.png">
+
+    <title>Pykachu 2.0 - The Raichu</title>
+
+    <link href="./bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="./pykachu/css/pykachu2.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="./bootstrap/assets/js/html5shiv.js"></script>
+    <script src="./bootstrap/assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Pykachu 2.0</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Admin</a></li>
+            </ul>
+        </div>
+        <!--/.nav-collapse -->
+    </div>
+</div>
+
+<div class="container">
+    <ul class="jobs-all unstyled">
+    </ul>
+</div>
+<div id="sidebar-left" style="display: none;">
+    <div class="menu-item">
+        Meus processos
+    </div>
+    <div class="menu-item">
+        Por tipo de Tarefa
+    </div>
+    <div class="menu-item">
+        Ainda em execução
+    </div>
+    <div class="menu-item">
+        Finalizados
+    </div>
+</div>
+<div id="sidebar-left-pop" onclick="hideShowLeft();"></div>
+<div id="sidebar-right" style="display: none;"></div>
+<div id="sidebar-right-pop" onclick="hideShowRight();"></div>
+
+
+<script type="template/text" id="new-job">
+    <div onclick="showHide(this);" style="cursor: pointer; cursor: hand; ">
+        <h3 class="job-name"><%= process.title %><br>
+                <span class="btn-xs job-item-value"><%= process.solicitante %></span>
+        </h3>
+    <div class="progress progress-striped active">
+            <div class="progress-bar" role="progressbar" style="width: <%= parseInt(process.atual)/parseInt(process.total)*100 %>%">
+            </div>
+        </div>
+    </div>
+    <div class="box-info alert-cinza col-lg-12 ">
+        <div class="col-lg-9">
+            Cliente: <span class="job-item-value"><%= process.customer %></span>
+            <br>Cliente-ID: <span class="job-item-value"><%= process.customer_id %></span>
+            <br>Solicitante: <span class="job-item-value"> <%= process.solicitante %></span>
+            <br>Data Inicio: <span class="job-item-value"> <%= process.data_inicio%> </span>
+            <br>Data Termino: <span class="job-item-value"> <%= process.data_termino %> </span>
+            <br>Passo <%= process.step %>: <span class="job-item-value" id="passo"> <%= process.step %> </span>
+        </div>
+        <div class="col-lg-3 text-right">
+            Andamento: <span class="job-item-value"> <%= parseInt(process.atual)/parseInt(process.total)*100 %>%</span>
+            <br>Velocidade: <span class="job-item-value" id="velocidade"> <%= process.velocidade %></span>
+            <br>Passo Atual: <span class="job-item-value" id="atual"><%= process.atual%></span>
+            <br>Total passos: <span class="job-item-value" id="total"><%= process.total%></span>
+            <br>Faltam: <span class="job-item-value" id="faltam"><%= parseInt(process.total) - parseInt(process.atual) %></span>
+            <br>Termina em: <span class="job-item-value" id="termina_em"><%= process.termina_em %></span>
+        </div>
+    </div>
+</script>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="./bootstrap/js/jquery-1.10.1.min.js"></script>
+<script src="./bootstrap/js/bootstrap.min.js"></script>
+<script src="./bootstrap/js/underscore.min.js"></script>
+<script src="./pykachu/js/socket.io.js"></script>
+<script>
+    var template_new_job = _.template($('#new-job').html());
+
+    fake_job = { 'id': 162532134165234,
+        'title': 'Criar tag em grupo de tags ja existentii',
+        'customer': 'FIVE IMPORTS COM. IMP & EXP. LTDA - ME - Buscapé',
+        'customer_id': '1135',
+        'velocidade': '10/s',
+        'data_inicio': '10/10/2013 às 15:43:21',
+        'data_termino': '10/10/2013 às 15:43:21',
+        'passo': 'Preparando Backup',
+        'solicitante': 'Taina Rocha',
+        'termina_em': '39 min',
+        'step': '30',
+        'total': '50000'
+    };
+
+    all_jobs = [];
+
+
+    _.each(_.range(10), function(e){
+        var tmp = _.clone(fake_job);
+        //tmp.id = new Date().getTime() + Math.floor((Math.random()*100000)+1);
+        all_jobs.push(tmp);
+
+    });
+
+    list_jobs = [];
+    $('.jobs-all').fadeIn();
+
+
+    update_or_create_job = function(all_jobs){
+        _.each(all_jobs, function(new_job){
+
+            var html = template_new_job({process: new_job});
+
+            indexOfJob = _.indexOf(list_jobs, new_job.id);
+
+            if (indexOfJob == -1){
+                $('<li/>', {
+                    'class': 'job-item',
+                    'id': 'job_'+new_job.id,
+                    html: html
+                }).appendTo('.jobs-all');
+                console.log('New Jobs, creating..');
+                list_jobs.push(new_job.id);
+            }
+            else{
+                li_atual = $('#job_'+new_job.id);
+                if(li_atual.html() != html){
+                    li_atual.html(html);
+                    console.log('Exists, update!');
+                }
+            }
+        });
+    };
+
+
+
+
+    showHide = function (elemento) {
+        $(elemento).next('div').fadeToggle("fast");
+    };
+
+    hideShowLeft = function () {
+        $("#sidebar-left").toggle();
+    };
+
+    hideShowRight = function () {
+        $("#sidebar-right").toggle();
+    };
+
+
+</script>
+
+<script>
+    var abc;
+    var socket = io.connect('http://localhost');
+    socket.on('news', function (data) {
+
+        update_or_create_job(data);
+//        console.log(data);
+
+//        abc = data;
+//
+//        for (item in data) {
+//            console.log(item);
+//            for (key in data[item]) {
+//                console.log(key + " = " + data[item][key]);
+//            }
+//        }
+//        socket.emit('my other event', { my: 'data' });
+    });
+
+</script>
+</body>
+</html>
