@@ -1,0 +1,16 @@
+{ 
+  "name" : "raychu"
+, "version" : "0.0.1"
+, "description" : "Evolucao do Pykachu"
+, "repository" :
+  { "type" : "git"
+  , "url" : "https://github.com/joaoleite/raychu"
+  }
+, "dependencies" : { "express" : "",
+                     "sqlite3" : "",
+		     "socket.io" : "",
+		     "moment" : ""
+		   }
+		   
+}
+
