@@ -1,4 +1,4 @@
-// Consts used on the code
+// Constantes usadas
 // ------------------------
 
 STARTED = 1;
@@ -8,7 +8,7 @@ FINISHED = 0;
 PORT = 8080;
 
 // ------------------------
-// Initialization functions
+// Inicializações
 // ------------------------
 
 var process = {};
@@ -21,7 +21,7 @@ server.listen(PORT);
 app.use(express.bodyParser());
 
 // ------------------------
-// Request functions
+// Funções que fazem requisições
 // ------------------------
 
 
@@ -110,7 +110,7 @@ io.sockets.on('connection', function (socket) {
 });
 
 // ------------------------
-// Comunication with server function
+// Comunicação com o client-side
 // ------------------------
 
 setInterval(function () {
@@ -120,3 +120,23 @@ setInterval(function () {
 },1000);
 
 
+// ------------------------
+// Funções úteis
+// ------------------------
+
+// Com essa implementação ditamos que pelo menos 3 campos devem ser enviados, o resto é apendado no JSON
+parse = function(id, totalSteps, owner, options) {
+    var json = {
+        id: id,
+        steps: totalSteps,
+        owner: owner
+    };
+
+    if(options){
+        for(attr in options) {
+            json.attr = options.attr;
+        }
+    }
+
+    return json;
+}
