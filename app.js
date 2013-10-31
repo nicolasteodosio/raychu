@@ -1,7 +1,15 @@
+// Consts used on the code
+// ------------------------
+
 STARTED = 1;
 RUNNING = 2;
 ERROR = -1;
 FINISHED = 0;
+PORT = 8080;
+
+// ------------------------
+// Initialization functions
+// ------------------------
 
 var process = {};
 
@@ -9,10 +17,13 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-
-server.listen(8080);
-
+server.listen(PORT);
 app.use(express.bodyParser());
+
+// ------------------------
+// Request functions
+// ------------------------
+
 
 //StartProcess - Pykachu
 app.post('/process', function(req, res) {
@@ -98,8 +109,14 @@ io.sockets.on('connection', function (socket) {
   });
 });
 
+// ------------------------
+// Comunication with server function
+// ------------------------
+
 setInterval(function () {
 
     // Emite evento para ser capturado pelo client
 	io.sockets.emit('news', process);
 },1000);
+
+
