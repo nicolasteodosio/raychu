@@ -1,24 +1,3 @@
-var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database(':memory:');
-
-db.serialize(function() {
-  db.run("CREATE TABLE lorem (info TEXT)");
-
-  var stmt = db.prepare("INSERT INTO lorem VALUES (?)");
-  for (var i = 0; i < 10; i++) {
-      stmt.run("Ipsum " + i);
-  }
-  stmt.finalize();
-
-  db.each("SELECT rowid AS id, info FROM lorem", function(err, row) {
-      console.log(row.id + ": " + row.info);
-  });
-});
-
-db.close();
-
-
-
 STARTED = 1;
 RUNNING = 2;
 ERROR = -1;
@@ -82,7 +61,7 @@ app.get(/^\/process\/(\d+)$/, function(req, res){
     res.send(process[id]);
 });
 
-// DeleteProcess - Pykachu
+// UpdateProcess - Pykachu
 app.put(/^\/process\/(\d+)$/, function(req, res){
     console.log("Atualizando Processo");
     var id = req.params[0];
@@ -92,13 +71,13 @@ app.put(/^\/process\/(\d+)$/, function(req, res){
     msg_step = req.body.msg_step;
     status = req.body.status;
 
-    if (!(step === undefined))
+    if (step !== undefined)
         process[id]['step'] = parseInt(step);
-    if (!(total === undefined))
+    if (total !== undefined)
         process[id]['total'] = parseInt(total);
-    if (!(msg_step === undefined))
+    if (msg_step !== undefined)
         process[id]['msg_step'] = msg_step;
-    if (!(status === undefined))
+    if (status !== undefined)
         process[id]['status'] = parseInt(status);
 
     res.send(process[id]);
@@ -120,7 +99,7 @@ io.sockets.on('connection', function (socket) {
 });
 
 setInterval(function () {
-	
+
+    // Emite evento para ser capturado pelo client
 	io.sockets.emit('news', process);
-	
 },1000);
