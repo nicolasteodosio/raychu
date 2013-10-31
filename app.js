@@ -25,33 +25,19 @@ app.use(express.bodyParser());
 // ------------------------
 
 
-//StartProcess - Pykachu
-app.post('/process', function(req, res) {
+// Função a ser chamada quando um processo for iniciado
+app.post('/process', function(request, response) {
     console.log("Criando novo processo");
-    Pykachu_id = new Date().getTime() + Math.floor((Math.random()*10)+1);
-    ret = "Start Pykachu;id="+Pykachu_id;
+    var json = request.body,
+        processId = new Date().getTime() + Math.floor((Math.random()*10)+1),
 
-    process[Pykachu_id] = {
-        id: Pykachu_id ,
-        step: 0,
-        total: -1,
-        msg_step: '',
-        status: STARTED
-    };
+    json.id = processId;
 
-    total = req.body.total;
-    msg_step = req.body.msg_step;
-
-    if (!(total === undefined))
-        process[Pykachu_id]['total'] = parseInt(total);
-    if (!(msg_step === undefined))
-        process[Pykachu_id]['msg_step'] = msg_step;
-
-    console.log(process[Pykachu_id]);
-    res.send(process[Pykachu_id]);
+    console.log(json);
+    response.send(json);
 });
 
-// Next Step - Pykachu
+// Função a ser chamada quando um processo passa para o próximo passo, se houver mais de um
 app.post(/^\/process\/(\d+)\/next$/, function(req, res){
     console.log("Proximo Processo");
     var id = req.params[0];
@@ -65,14 +51,14 @@ app.post(/^\/process\/(\d+)\/next$/, function(req, res){
     res.send(process[id]);
 });
 
-// GetProcess - Pykachu
+// Função a ser chamada para receber parâmetros de um processo
 app.get(/^\/process\/(\d+)$/, function(req, res){
     console.log("Devolvendo processo");
     var id = req.params[0];
     res.send(process[id]);
 });
 
-// UpdateProcess - Pykachu
+// Função a ser chamada quando um processo tiver algum parâmetro mudado
 app.put(/^\/process\/(\d+)$/, function(req, res){
     console.log("Atualizando Processo");
     var id = req.params[0];
@@ -94,7 +80,7 @@ app.put(/^\/process\/(\d+)$/, function(req, res){
     res.send(process[id]);
 });
 
-// DeleteProcess - Pykachu
+// Função a ser chamada quando algum processo é removido
 app.delete(/^\/process\/(\d+)$/, function(req, res){
     console.log("Deletando processo");
     var id = req.params[0];
@@ -118,25 +104,3 @@ setInterval(function () {
     // Emite evento para ser capturado pelo client
 	io.sockets.emit('news', process);
 },1000);
-
-
-// ------------------------
-// Funções úteis
-// ------------------------
-
-// Com essa implementação ditamos que pelo menos 3 campos devem ser enviados, o resto é apendado no JSON
-parse = function(id, totalSteps, owner, options) {
-    var json = {
-        id: id,
-        steps: totalSteps,
-        owner: owner
-    };
-
-    if(options){
-        for(attr in options) {
-            json.attr = options.attr;
-        }
-    }
-
-    return json;
-}
