@@ -29,7 +29,7 @@ app.use(express.bodyParser());
 app.post('/process', function(request, response) {
     console.log("Criando novo processo");
     var json = request.body,
-        processId = new Date().getTime() + Math.floor((Math.random()*10)+1),
+        processId = new Date().getTime() + Math.floor((Math.random()*10)+1);
 
     json.id = processId;
 
