@@ -34,6 +34,7 @@ app.post('/process', function(request, response) {
     json.id = processId;
 
     console.log(json);
+    process[processId] = json;
     response.send(json);
 });
 
