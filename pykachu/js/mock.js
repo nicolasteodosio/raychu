@@ -32,14 +32,11 @@ mockProcess = function(n) {
 nextStep = function(process) {
     $.ajax({
             type: "POST",
-            url: "http://localhost:8080/process/" + process.id + "/next/",
+            url: "http://localhost:8080/process/" + process.id + "/next",
             content_type: 'application/json',
             data: {
-                id: 162532134165234,
-                passo_msg: 'Seguindo para o passo ' + str(process.passo_atual++),
-                passo_atual: processo.passo_atual,
-                passo_total: processo.passo_total,
-                status: 1
+                id: process.id,
+                passo_msg: 'Seguindo para o passo '
             }
         });
 }

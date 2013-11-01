@@ -23,6 +23,11 @@ var io = require('socket.io').listen(server, {log: false });
 server.listen(PORT);
 app.use(express.bodyParser());
 
+//var REDIS_SERVER = "http://hughes.sieve.com.br";
+//var REDIS_PORT = 6379;
+//var redis = require("redis");
+//var client = redis.createClient(REDIS_PORT, REDIS_SERVER);
+
 // ------------------------
 // Funções que fazem requisições
 // ------------------------
@@ -152,7 +157,16 @@ io.sockets.on('connection', function (socket) {
 // ------------------------
 
 setInterval(function () {
-
+//    client.keys("pykachu*", function (err, keys) {
+//        keys.forEach(function (key, pos) {
+//            client.hgetall(key, function (err, obj) {
+//                if (obj) {
+//                    obj.key = key;
+//                    io.sockets.emit('pykachu', obj);
+//                }
+//            });
+//        });
+//    });
     // Emite evento para ser capturado pelo client
 	io.sockets.emit('news', process);
 },1000);
