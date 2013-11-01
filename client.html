@@ -31,7 +31,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Pykachu 2.0</a>
+            <a class="navbar-brand" href="#">Raychu</a>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
@@ -81,7 +81,7 @@
         <h3 class="job-name"><%= process.titulo %><br>
             <span class="btn-xs job-item-value"><%= process.solicitante %></span>
         </h3>
-    <div class="progress progress-striped">
+        <div class="progress progress-striped">
             <div class="progress-bar <%= progress_bar_style %>" role="progressbar" style="width: <%= parseInt(process.passo_atual)/parseInt(process.passo_total)*100 %>%">
             </div>
         </div>
@@ -111,12 +111,12 @@
 
 <!-- Template da app de notificação -->
 <div id="container" style="display:none">
-  <div id="basic-template">
-      <a class="ui-notify-cross ui-notify-close" href="#">x</a>
-      <h1>#{title}</h1>
-      <p>#{data_fim}</p>
-      <p>#{data_duracao}</p>
-  </div>
+    <div id="basic-template">
+        <a class="ui-notify-cross ui-notify-close" href="#">x</a>
+        <h1>#{title}</h1>
+        <p>#{data_fim}</p>
+        <p>#{data_duracao}</p>
+    </div>
 </div>
 
 
@@ -154,6 +154,11 @@
     progress_bar_style[STARTED] = 'progress-bar-warning';
     progress_bar_style[ERROR] = 'progress-bar-danger';
     progress_bar_style[FINISHED] = 'progress-bar-success';
+    progress_bar_style["Running"] = 'progress-bar-info';
+    progress_bar_style['Waiting'] = 'progress-bar-warning';
+    progress_bar_style['Wainting'] = 'progress-bar-warning';
+    progress_bar_style['Error'] = 'progress-bar-danger';
+    progress_bar_style['Finish'] = 'progress-bar-success';
 
     // Tipos de Filtros personalizados
     filtro = {}
@@ -193,13 +198,18 @@
     };
 
     update_or_create_job = function(all_jobs){
-        allProcess = all_jobs;
+        all_jobs = _.compact(all_jobs);
 
         _.each(all_jobs, function(new_job){
 
             var html = template_new_job({process: new_job, progress_bar_style: progress_bar_style[new_job.status]});
 
-            indexOfJob = _.indexOf(list_jobs, new_job.id);
+            if (new_job.id == '1383319610.25'){
+                console.log(new_job.passo_atual);
+            }
+
+            indexOfJob = _.indexOf(allProcess, new_job.id);
+
 
             if (indexOfJob == -1){
                 $('<li/>', {
@@ -207,7 +217,7 @@
                     'id': 'job_'+new_job.id,
                     html: html
                 }).appendTo('.jobs-all');
-                list_jobs.push(new_job.id);
+                allProcess.push(new_job.id);
             }
             else{
                 li_atual = $('#job_'+new_job.id);
@@ -231,7 +241,7 @@
         $("#sidebar-right").toggle();
     };
 
-//    Inicializando o jQuery notify
+    //    Inicializando o jQuery notify
     $("#container").notify();
 
 </script>
@@ -251,12 +261,94 @@
     });
 
     socket.on('finish', function(data) {
-        console.log(data);
-        $("#container").notify("create", {
-            title: data.titulo + ' foi finalizado com sucesso',
-            data_fim: 'Terminou em: ' + data.data_fim,
-            data_duracao: 'Duração: ' + data.data_duracao
-        });
+        showNotification(data);
+    });
+
+    jaNotificadas = [];
+
+    showNotification = function(data){
+        fim = data.data_fim || 'Agora';
+        duracao = data.data_duracao || 'Velocidade da Luz';
+        if (!_.contains(jaNotificadas, data.id)){
+            jaNotificadas.push(data.id);
+            $("#container").notify("create", {
+                title: data.titulo + ' foi finalizado com sucesso',
+                data_fim: 'Terminou em: ' + fim,
+                data_duracao: 'Duração: ' + duracao
+            });
+        }
+    }
+</script>
+<script>
+    list_jobs_pykachu_antigo = [];
+    var socket = io.connect("http://hughes.sieve.com.br:8080");
+    socket.on('pykachu', function(data) {
+
+        list_jobs_pykachu_antigo = _.compact(list_jobs_pykachu_antigo);
+
+        obj = {};
+        obj.id = data.id;
+        obj.passo_msg = data.last_item;
+        obj.titulo = data.name;
+        obj.data_inicio = data.start_at;
+        switch (data.state){
+            case 'Finish':
+                obj.status = FINISHED;
+                break;
+            case 'Running':
+                obj.status = RUNNING;
+                break;
+            case 'Waiting' :
+                obj.status = STARTED;
+                break;
+            case 'Wainting' :
+                obj.status = STARTED;
+                break;
+            case 'Error':
+                obj.status = ERROR;
+                break;
+            default :
+                obj.status = RUNNING;
+                break;
+        }
+        obj.status = typeof(data.state )!== 'undefined' ?  data.state  : RUNNING;
+        obj.passo_atual = data.steps;
+
+        obj.passo_total = data.total;
+        if (!_.findWhere(list_jobs_pykachu_antigo, {id: obj.id})){
+            console.log('achie');
+            list_jobs_pykachu_antigo.push(obj);
+            if(obj.passo_atual == obj.passo_total){
+                jaNotificadas.push(obj.id);
+            }
+        } else {
+            newObj = _.findWhere(list_jobs_pykachu_antigo, {id: obj.id});
+            index = _.indexOf(list_jobs_pykachu_antigo, newObj);
+            list_jobs_pykachu_antigo[index] = obj;
+            if(obj.passo_atual == obj.passo_total){
+                showNotification(obj);
+            }
+        }
+
+
+        update_or_create_job(filter_process(list_jobs_pykachu_antigo));
+//
+//            var query_job = jobs.where({key: (data.key) });
+//            var job = null;
+//
+//            if(!query_job.length){
+//                job = new Job(data);
+//                jobs.add(job);
+//                appview.add(job);
+//
+//            } else {
+//                job = query_job[0];
+//                if (data.delete) {
+//                    jobs.remove(job);
+//                } else {
+//                    job.set(data);
+//                }
+//            }
     });
 </script>
 </body>

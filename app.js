@@ -170,4 +170,4 @@ setInterval(function () {
 //    });
     // Emite evento para ser capturado pelo client
 	io.sockets.emit('news', process);
-},1000);
+},100);

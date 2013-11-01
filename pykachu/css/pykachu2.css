@@ -10,6 +10,8 @@ body {
 
 .job-name {
     font-size: 17px;
+    overflow: hidden;
+    height: 40px;
 }
 
 .job-start-hour {
