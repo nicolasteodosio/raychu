@@ -162,7 +162,7 @@
     progress_bar_style['Finish'] = 'progress-bar-success';
 
     // Tipos de Filtros personalizados
-    filtro = {}
+    filtro = {};
     meus_processos = { solicitante: usuario };
     finalizados = { status: FINISHED };
     em_execucao = { status: RUNNING };
@@ -183,6 +183,7 @@
         filtro = eval(tipo_filtro);
         $('.jobs-all').html('');
         list_jobs = [];
+        allProcess = [];
     };
 
     ativar_filtro_titulo = function(titulo){
@@ -314,7 +315,6 @@
                 obj.status = RUNNING;
                 break;
         }
-        obj.status = typeof(data.state )!== 'undefined' ?  data.state  : RUNNING;
         obj.passo_atual = data.steps;
 
         obj.passo_total = data.total;
