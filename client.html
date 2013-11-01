@@ -229,6 +229,10 @@
     hideShowRight = function () {
         $("#sidebar-right").toggle();
     };
+
+//    Inicializando o jQuery notify
+    $("#container").notify();
+
 </script>
 
 <script>
@@ -242,6 +246,13 @@
         _.each(titulos, function(titulo){
             var html = template_new_sub_menu_item({nome: titulo});
             $('#sidebar-left').append(html);
+        });
+    });
+
+    socket.on('finish', function(data) {
+        $("#container").notify("create", {
+            title: data.titulo + 'foi finalizado com sucesso',
+            text: 'Terminou em: ' + data.data_fim
         });
     });
 </script>
