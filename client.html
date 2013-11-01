@@ -160,7 +160,6 @@
 
     ativar_filtro = function (tipo_filtro) {
         filtro = eval(tipo_filtro);
-        console.log(filtro);
         $('.jobs-all').html('');
         list_jobs = [];
     };
@@ -191,7 +190,6 @@
                     'id': 'job_'+new_job.id,
                     html: html
                 }).appendTo('.jobs-all');
-//                console.log('New Jobs, creating..');
                 list_jobs.push(new_job.id);
             }
             else{
@@ -199,7 +197,6 @@
 
                 if(li_atual.html() != html){
                     li_atual.html(html);
-                    console.log('Exists, update!');
                 }
             }
         });
@@ -224,28 +221,17 @@
 </script>
 
 <script>
-    var abc;
     var socket = io.connect('http://localhost:8080');
     socket.on('news', function (data) {
         update_or_create_job(filter_process(data));
-        // Cria o menu de titulos
+
         titulos = _.uniq(_.pluck(data, 'titulo'));
         $('.sub-menu-item').remove();
+
         _.each(titulos, function(titulo){
-            console.log(titulo);
             var html = template_new_sub_menu_item({nome: titulo});
             $('#sidebar-left').append(html);
         });
-
-//        console.log(data);
-//        abc = data;
-//        for (item in data) {
-//            console.log(item);
-//            for (key in data[item]) {
-//                console.log(key + " = " + data[item][key]);
-//            }
-//        }
-//        socket.emit('my other event', { my: 'data' });
     });
 </script>
 </body>
