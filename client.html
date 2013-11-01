@@ -94,7 +94,7 @@
         </div>
         <div class="col-lg-3 text-right">
             %: <span class="job-item-value"> <%= (parseInt(process.passo_atual)/parseInt(process.passo_total)*100).toFixed(2) %>%</span>
-            <br>Velocidade: <span class="job-item-value" id="velocidade"> <%= process.velocidade %></span>
+            <br>Velocidade: <span class="job-item-value" id="velocidade"><%= typeof(process.velocidade)!== 'undefined' ?  process.velocidade.toFixed(2) : 0 %> /s</span>
             <br>Passo Atual: <span class="job-item-value" id="atual"><%= process.passo_atual%></span>
             <br>Total passos: <span class="job-item-value" id="total"><%= process.passo_total%></span>
             <br>Faltam: <span class="job-item-value" id="faltam"><%= parseInt(process.passo_total) - parseInt(process.passo_atual) %></span>

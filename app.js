@@ -62,6 +62,12 @@ app.post('/process', function(request, response) {
         json.status = STARTED;
     }
 
+    if(json.ultima_atualizacao === undefined){
+        json.ultima_atualizacao = new Date().getTime();
+    }
+
+
+
     process[processId] = json;
     response.send(json);
 });
@@ -82,6 +88,14 @@ app.post(/^\/process\/(\d+)\/next$/, function(request, response){
     else{
         process[id]['status'] = RUNNING;
     }
+
+    // Calculo de x por segundo
+    process[id]['velocidade'] = 1000 / (new Date().getTime() - process[id]['ultima_atualizacao']);
+    process[id]['ultima_atualizacao'] = new Date().getTime();
+
+    // Calculo de termino provavel
+    segundos_faltantes = (process[id]['passo_total'] - process[id]['passo_atual'])/process[id]['velocidade'];
+    process[id]['termina_em'] = moment().add('seconds', Math.floor(segundos_faltantes)).format(MOMENT_DATETIME_STRING);;
 
     response.send(process[id]);
 });
