@@ -69,10 +69,10 @@
 <script type="template/text" id="new-job">
     <div onclick="showHide(this);" style="cursor: pointer; cursor: hand; ">
         <h3 class="job-name"><%= process.titulo %><br>
-                <span class="btn-xs job-item-value"><%= process.solicitante %></span>
+            <span class="btn-xs job-item-value"><%= process.solicitante %></span>
         </h3>
     <div class="progress progress-striped">
-            <div class="progress-bar" role="progressbar" style="width: <%= parseInt(process.passo_atual)/parseInt(process.passo_total)*100 %>%">
+            <div class="progress-bar <%= progress_bar_style %>" role="progressbar" style="width: <%= parseInt(process.passo_atual)/parseInt(process.passo_total)*100 %>%">
             </div>
         </div>
     </div>
@@ -163,10 +163,16 @@
         }
     };
 
+    progress_bar_style = [];
+    progress_bar_style[2] = 'progress-bar-info';
+    progress_bar_style[1] = 'progress-bar-warning';
+    progress_bar_style[3] = 'progress-bar-danger';
+    progress_bar_style[0] = 'progress-bar-success';
+
     update_or_create_job = function(all_jobs){
         _.each(all_jobs, function(new_job){
 
-            var html = template_new_job({process: new_job});
+            var html = template_new_job({process: new_job, progress_bar_style: progress_bar_style[new_job.status]});
 
             indexOfJob = _.indexOf(list_jobs, new_job.id);
 
@@ -181,10 +187,10 @@
             }
             else{
                 li_atual = $('#job_'+new_job.id);
-                if(li_atual.html() != html){
-                    li_atual.html(html);
-//                    console.log('Exists, update!');
-                }
+//                if(li_atual.html() != html){
+//                    li_atual.html(html);
+////                    console.log('Exists, update!');
+//                }
             }
         });
     };
