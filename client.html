@@ -45,17 +45,20 @@
     </ul>
 </div>
 <div id="sidebar-left" style="display: none;">
-    <div class="menu-item">
+    <div class="menu-item" onclick="ativar_filtro('todos');">
+        Todos
+    </div>
+    <div class="menu-item" onclick="ativar_filtro('meus_processos');">
         Meus processos
     </div>
-    <div class="menu-item">
-        Por tipo de Tarefa
-    </div>
-    <div class="menu-item">
+    <div class="menu-item" onclick="ativar_filtro('em_execucao');">
         Ainda em execução
     </div>
-    <div class="menu-item">
+    <div class="menu-item" onclick="ativar_filtro('finalizados');">
         Finalizados
+    </div>
+    <div class="menu-item" onclick="ativar_filtro('meus_processos');">
+        Por tipo de Tarefa
     </div>
 </div>
 <div id="sidebar-left-pop" onclick="hideShowLeft();"></div>
@@ -138,6 +141,28 @@
     $('.jobs-all').fadeIn();
 
 
+    filtro = {}
+    // Tipos de Filtros personalizados
+    meus_processos = { solicitante: 'Victor Novais' };
+    finalizados = { status: 1 };
+    em_execucao = { status: 0 };
+    todos = {};
+
+    ativar_filtro = function (tipo_filtro) {
+        filtro = eval(tipo_filtro);
+        console.log(filtro);
+        $('.jobs-all').html('');
+        list_jobs = [];
+    };
+
+    filter_process = function(all_jobs){
+        if(_.size(filtro) > 0){
+            return _.where(all_jobs, filtro);
+        }else{
+            return all_jobs;
+        }
+    };
+
     update_or_create_job = function(all_jobs){
         _.each(all_jobs, function(new_job){
 
@@ -151,14 +176,14 @@
                     'id': 'job_'+new_job.id,
                     html: html
                 }).appendTo('.jobs-all');
-                console.log('New Jobs, creating..');
+//                console.log('New Jobs, creating..');
                 list_jobs.push(new_job.id);
             }
             else{
                 li_atual = $('#job_'+new_job.id);
                 if(li_atual.html() != html){
                     li_atual.html(html);
-                    console.log('Exists, update!');
+//                    console.log('Exists, update!');
                 }
             }
         });
@@ -186,12 +211,9 @@
     var abc;
     var socket = io.connect('http://localhost:8080');
     socket.on('news', function (data) {
-
-        update_or_create_job(data);
+        update_or_create_job(filter_process(data));
 //        console.log(data);
-
 //        abc = data;
-//
 //        for (item in data) {
 //            console.log(item);
 //            for (key in data[item]) {

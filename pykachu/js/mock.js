@@ -9,7 +9,7 @@ mockProcess = function(n) {
                 // Campos com regra de negocio do cliente
                 cliente: 'FIVE IMPORTS COM. IMP & EXP. LTDA - ME - Buscapé',
                 cliente_id: '1135',
-                solicitante: 'Joao Leite',
+                solicitante: 'Victor Novais',
                 // Campos Calculados pela Tela
                 velocidade: '10/s',
                 termina_em: '39 min',

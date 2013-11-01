@@ -119,9 +119,9 @@ app.delete(/^\/process\/(\d+)$/, function(request, response){
 
 
 io.sockets.on('connection', function (socket) {
-  socket.on('_evento_de_deletar', function (data) {
-    console.log(data);
-  });
+    socket.on('_evento_de_deletar', function (data) {
+        console.log(data);
+    });
 });
 
 // ------------------------
