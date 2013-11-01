@@ -35,6 +35,9 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Admin</a></li>
             </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active" id="box-user"><a href="#">Usuario</a></li>
+            </ul>
         </div>
         <!--/.nav-collapse -->
     </div>
@@ -116,6 +119,9 @@
 
     var template_new_job = _.template($('#new-job').html());
 
+    // Variavel externa
+    usuario = 'Joao Leite';
+
     // Status dos jobs
     STARTED = 1;
     RUNNING = 2;
@@ -131,7 +137,7 @@
 
     // Tipos de Filtros personalizados
     filtro = {}
-    meus_processos = { solicitante: 'Victor Novais' };
+    meus_processos = { solicitante: usuario };
     finalizados = { status: FINISHED };
     em_execucao = { status: RUNNING };
     todos = {};
@@ -142,6 +148,8 @@
     $('.jobs-all').fadeIn();
 
 
+
+    $('#box-user > a').html(usuario);
 
     ativar_filtro = function (tipo_filtro) {
         filtro = eval(tipo_filtro);
