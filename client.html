@@ -78,20 +78,23 @@
     </div>
     <div class="box-info alert-cinza col-lg-12 ">
         <div class="col-lg-9">
-            Cliente: <span class="job-item-value"><%= process.cliente %></span>
+            Passo <%= process.passo_atual %>: <span class="job-item-value" id="passo"> <%= process.passo_msg %> </span>
+            <br>Cliente: <span class="job-item-value"><%= process.cliente %></span>
             <br>Cliente-ID: <span class="job-item-value"><%= process.cliente_id %></span>
-            <br>Solicitante: <span class="job-item-value"> <%= process.solicitante %></span>
             <br>Data Inicio: <span class="job-item-value"> <%= process.data_inicio%> </span>
+            <% if(process.data_duracao === undefined){ %>
+            <br>Termina em: <span class="job-item-value" id="termina_em"><%= process.termina_em %></span>
+            <% } else { %>
             <br>Data Termino: <span class="job-item-value"> <%= process.data_fim %> </span>
-            <br>Passo <%= process.passo_atual %>: <span class="job-item-value" id="passo"> <%= process.passo_msg %> </span>
+            <br>Tempo de Execução: <span class="job-item-value" id="termina_em"><%= process.data_duracao %></span>
+            <% } %>
         </div>
         <div class="col-lg-3 text-right">
-            Andamento: <span class="job-item-value"> <%= (parseInt(process.passo_atual)/parseInt(process.passo_total)*100).toFixed(2) %>%</span>
+            %: <span class="job-item-value"> <%= (parseInt(process.passo_atual)/parseInt(process.passo_total)*100).toFixed(2) %>%</span>
             <br>Velocidade: <span class="job-item-value" id="velocidade"> <%= process.velocidade %></span>
             <br>Passo Atual: <span class="job-item-value" id="atual"><%= process.passo_atual%></span>
             <br>Total passos: <span class="job-item-value" id="total"><%= process.passo_total%></span>
             <br>Faltam: <span class="job-item-value" id="faltam"><%= parseInt(process.passo_total) - parseInt(process.passo_atual) %></span>
-            <br>Termina em: <span class="job-item-value" id="termina_em"><%= process.termina_em %></span>
         </div>
     </div>
 </script>
@@ -105,48 +108,40 @@
 <script src="./bootstrap/js/underscore.min.js"></script>
 <script src="./pykachu/js/socket.io.js"></script>
 <script src="./pykachu/js/mock.js"></script>
+<script src="./pykachu/js/moment.js"></script>
+<script src="./pykachu/js/lang/pt-br.js"></script>
+
 <script>
+    moment.lang('pt-br');
+
     var template_new_job = _.template($('#new-job').html());
 
-    fake_job = {
-        // Campos com regra de negocio do cliente
-        'cliente': 'FIVE IMPORTS COM. IMP & EXP. LTDA - ME - Buscapé',
-        'cliente_id': '1135',
-        'solicitante': 'Taina Rocha',
-        // Campos Calculados pela Tela
-        'velocidade': '10/s',
-        'termina_em': '39 min',
-        // Campos obrigatorios pelo app.js
-        'id': 162532134165234,
-        'titulo': 'Criar tag em grupo de tags ja existentii',
-        'data_inicio': '10/10/2013 às 15:43:21',
-        'data_fim': '10/10/2013 às 15:43:21',
-        'passo_msg': 'Preparando Backup',
-        'passo_atual': '30',
-        'total': '50000',
-        'status': 1
-    };
+    // Status dos jobs
+    STARTED = 1;
+    RUNNING = 2;
+    ERROR = 3;
+    FINISHED = 0;
+    progress_bar_style = [];
+
+    // Status da barra de progresso
+    progress_bar_style[RUNNING] = 'progress-bar-info';
+    progress_bar_style[STARTED] = 'progress-bar-warning';
+    progress_bar_style[ERROR] = 'progress-bar-danger';
+    progress_bar_style[FINISHED] = 'progress-bar-success';
+
+    // Tipos de Filtros personalizados
+    filtro = {}
+    meus_processos = { solicitante: 'Victor Novais' };
+    finalizados = { status: FINISHED };
+    em_execucao = { status: RUNNING };
+    todos = {};
+
 
     all_jobs = [];
-
-
-    _.each(_.range(10), function(e){
-        var tmp = _.clone(fake_job);
-        //tmp.id = new Date().getTime() + Math.floor((Math.random()*100000)+1);
-        all_jobs.push(tmp);
-
-    });
-
     list_jobs = [];
     $('.jobs-all').fadeIn();
 
 
-    filtro = {}
-    // Tipos de Filtros personalizados
-    meus_processos = { solicitante: 'Victor Novais' };
-    finalizados = { status: 1 };
-    em_execucao = { status: 0 };
-    todos = {};
 
     ativar_filtro = function (tipo_filtro) {
         filtro = eval(tipo_filtro);
@@ -162,12 +157,6 @@
             return all_jobs;
         }
     };
-
-    progress_bar_style = [];
-    progress_bar_style[2] = 'progress-bar-info';
-    progress_bar_style[1] = 'progress-bar-warning';
-    progress_bar_style[3] = 'progress-bar-danger';
-    progress_bar_style[0] = 'progress-bar-success';
 
     update_or_create_job = function(all_jobs){
         _.each(all_jobs, function(new_job){
@@ -187,10 +176,11 @@
             }
             else{
                 li_atual = $('#job_'+new_job.id);
-//                if(li_atual.html() != html){
-//                    li_atual.html(html);
-////                    console.log('Exists, update!');
-//                }
+
+                if(li_atual.html() != html){
+                    li_atual.html(html);
+                    console.log('Exists, update!');
+                }
             }
         });
     };

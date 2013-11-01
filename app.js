@@ -6,6 +6,7 @@ RUNNING = 2;
 ERROR = 3;
 FINISHED = 0;
 PORT = 8080;
+MOMENT_DATETIME_STRING = "DD/MM/YYYY HH:mm:ss";
 
 // ------------------------
 // Inicializações
@@ -14,6 +15,7 @@ PORT = 8080;
 var process = {};
 
 var moment = require('moment');
+moment.lang('pt-br');
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
@@ -26,6 +28,8 @@ app.use(express.bodyParser());
 // ------------------------
 
 
+//TODO: Criar o POST de erro
+
 // Função a ser chamada quando um processo for iniciado
 app.post('/process', function(request, response) {
     console.log("Criando novo processo");
@@ -33,7 +37,7 @@ app.post('/process', function(request, response) {
         processId = new Date().getTime() + Math.floor((Math.random()*10)+1);
 
     json.id = processId;
-    json.data_inicio = moment();
+    json.data_inicio = moment().format(MOMENT_DATETIME_STRING);
     json.data_fim = null ;
 
     if(json.passo_total === undefined){
@@ -72,12 +76,12 @@ app.post(/^\/process\/(\d+)\/next$/, function(request, response){
     //Acabou
     if (process[id]['passo_total'] == process[id]['passo_atual']){
         process[id]['status'] = FINISHED;
+        process[id]['data_fim'] = moment().format(MOMENT_DATETIME_STRING);
+        process[id]['data_duracao'] = moment(process[id]['data_fim'], MOMENT_DATETIME_STRING).from(moment(process[id]['data_inicio'], MOMENT_DATETIME_STRING));
     }
     else{
         process[id]['status'] = RUNNING;
     }
-    console.log(process[id]['passo_total']);
-    console.log(process[id]['passo_atual']);
 
     response.send(process[id]);
 });
