@@ -1,5 +1,5 @@
 mockProcess = function(n) {
-    var i = 0;
+    var i = 1;
     while(i <= n) {
         $.ajax({
             type: "POST",
@@ -27,10 +27,12 @@ mockProcess = function(n) {
         i++;
     };
 }
-//mockProcess(2)
+mockProcess(2)
 
-nextStep = function(process) {
-    $.ajax({
+finishProcess = function(process) {
+    i = process.passo_atual;
+    while(i < process.passo_total) {
+        $.ajax({
             type: "POST",
             url: "http://localhost:8080/process/" + process.id + "/next",
             content_type: 'application/json',
@@ -39,4 +41,10 @@ nextStep = function(process) {
                 passo_msg: 'Seguindo para o passo '
             }
         });
+
+        for(j=0; j<1000; j++) {
+
+        }
+        i++;
+    }
 }

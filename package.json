@@ -6,10 +6,11 @@
   { "type" : "git"
   , "url" : "https://github.com/joaoleite/raychu"
   }
-, "dependencies" : { "express" : "",
-                     "sqlite3" : "",
-		     "socket.io" : "",
-		     "moment" : ""
+, "dependencies" : {
+    "express" : "",
+    "socket.io" : "",
+    "moment" : "",
+    "redis" : ""
 		   }
 		   
 }

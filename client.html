@@ -114,7 +114,8 @@
   <div id="basic-template">
       <a class="ui-notify-cross ui-notify-close" href="#">x</a>
       <h1>#{title}</h1>
-      <p>#{text}</p>
+      <p>#{data_fim}</p>
+      <p>#{data_duracao}</p>
   </div>
 </div>
 
@@ -250,9 +251,11 @@
     });
 
     socket.on('finish', function(data) {
+        console.log(data);
         $("#container").notify("create", {
-            title: data.titulo + 'foi finalizado com sucesso',
-            text: 'Terminou em: ' + data.data_fim
+            title: data.titulo + ' foi finalizado com sucesso',
+            data_fim: 'Terminou em: ' + data.data_fim,
+            data_duracao: 'Duração: ' + data.data_duracao
         });
     });
 </script>
