@@ -20,7 +20,7 @@ mockProcess = function(n) {
                 data_fim: '10/10/2013 às 15:43:21',
                 passo_msg: 'Preparando Backup',
                 passo_atual: Math.floor((Math.random()*49)+1),
-                total: Math.floor((Math.random()*100)+50),
+                passo_total: Math.floor((Math.random()*100)+50),
                 status: 1
             }
         });

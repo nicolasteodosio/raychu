@@ -3,7 +3,7 @@
 
 STARTED = 1;
 RUNNING = 2;
-ERROR = -1;
+ERROR = 3;
 FINISHED = 0;
 PORT = 8080;
 
@@ -17,7 +17,7 @@ var moment = require('moment');
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
+var io = require('socket.io').listen(server, {log: false });
 server.listen(PORT);
 app.use(express.bodyParser());
 
@@ -36,13 +36,15 @@ app.post('/process', function(request, response) {
     json.data_inicio = moment();
     json.data_fim = null ;
 
-    if(json.passos === undefined){
-        json.passos = -1;
+    if(json.passo_total === undefined){
+        json.passo_total = -1;
     }
+    json.passo_total = parseInt(json.passo_total);
 
     if(json.passo_atual === undefined){
         json.passo_atual = 0;
     }
+    json.passo_atual = parseInt(json.passo_atual);
 
     if(json.passo_msg === undefined){
         json.passo_msg = "Iniciando processo";
@@ -60,46 +62,49 @@ app.post('/process', function(request, response) {
     response.send(json);
 });
 
-// Função a ser chamada quando um processo passa para o próximo passo, se houver mais de um
+// Função a ser chamada quando um processo passa para o próximo passo_total, se houver mais de um
 app.post(/^\/process\/(\d+)\/next$/, function(request, response){
-    console.log("Proximo Processo");
-
     var id = request.params[0];
 
-    process[id]['step']++;
-    msg_step = request.body.msg_step;
+    process[id]['passo_atual']++;
+    passo_msg = request.body.passo_msg;
 
-    if (msg_step !== undefined) {
-        process[id]['msg_step'] = msg_step;
+    //Acabou
+    if (process[id]['passo_total'] == process[id]['passo_atual']){
+        process[id]['status'] = FINISHED;
     }
+    else{
+        process[id]['status'] = RUNNING;
+    }
+    console.log(process[id]['passo_total']);
+    console.log(process[id]['passo_atual']);
 
     response.send(process[id]);
 });
 
 // Função a ser chamada para receber parâmetros de um processo
 app.get(/^\/process\/(\d+)$/, function(request, response){
-    console.log("Retornando processo");
-
     var id = request.params[0];
     response.send(process[id]);
 });
 
 // Função a ser chamada quando um processo tiver algum parâmetro mudado
 app.put(/^\/process\/(\d+)$/, function(request, response){
-    console.log("Atualizando Processo");
-
     var id = request.params[0],
-        step = request.body.step,
-        total = request.body.total,
-        msg_step = request.body.msg_step,
+        passo_atual = request.body.passo_atual,
+        passo_total = request.body.passo_total,
+        passo_msg = request.body.passo_msg,
         status = request.body.status;
 
-    if(step !== undefined)
-        process[id]['step'] = parseInt(step);
-    if(total !== undefined)
-        process[id]['total'] = parseInt(total);
-    if(msg_step !== undefined)
-        process[id]['msg_step'] = msg_step;
+    if(passo_total !== undefined)
+        process[id]['passo_total'] = parseInt(passo_total);
+
+    if(passo_atual !== undefined)
+        process[id]['passo_atual'] = parseInt(passo_atual);
+
+    if(passo_msg !== undefined)
+        process[id]['passo_msg'] = passo_msg;
+
     if(status !== undefined)
         process[id]['status'] = parseInt(status);
 
