@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="./bootstrap/assets/ico/favicon.png">
 
-    <title>Pykachu 2.0 - The Raichu</title>
+    <title>Pykachu 2.0 - The Raychu</title>
 
     <link href="./bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="./pykachu/css/pykachu2.css" rel="stylesheet">
@@ -69,6 +69,11 @@
 <div id="sidebar-right-pop" onclick="hideShowRight();"></div>
 
 
+<script type="template/text" id="new-sub-menu-item">
+    <div class="sub-menu-item" onclick="ativar_filtro_titulo('<%= nome %>');">
+        <%= nome %>
+    </div>
+</script>
 <script type="template/text" id="new-job">
     <div onclick="showHide(this);" style="cursor: pointer; cursor: hand; ">
         <h3 class="job-name"><%= process.titulo %><br>
@@ -118,6 +123,7 @@
     moment.lang('pt-br');
 
     var template_new_job = _.template($('#new-job').html());
+    var template_new_sub_menu_item = _.template($('#new-sub-menu-item').html());
 
     // Variavel externa
     usuario = 'Joao Leite';
@@ -140,6 +146,7 @@
     meus_processos = { solicitante: usuario };
     finalizados = { status: FINISHED };
     em_execucao = { status: RUNNING };
+    titulos = {};
     todos = {};
 
 
@@ -156,6 +163,11 @@
         console.log(filtro);
         $('.jobs-all').html('');
         list_jobs = [];
+    };
+
+    ativar_filtro_titulo = function(titulo){
+        titulos = {titulo: titulo};
+        ativar_filtro('titulos');
     };
 
     filter_process = function(all_jobs){
@@ -216,6 +228,15 @@
     var socket = io.connect('http://localhost:8080');
     socket.on('news', function (data) {
         update_or_create_job(filter_process(data));
+        // Cria o menu de titulos
+        titulos = _.uniq(_.pluck(data, 'titulo'));
+        $('.sub-menu-item').remove();
+        _.each(titulos, function(titulo){
+            console.log(titulo);
+            var html = template_new_sub_menu_item({nome: titulo});
+            $('#sidebar-left').append(html);
+        });
+
 //        console.log(data);
 //        abc = data;
 //        for (item in data) {
@@ -226,7 +247,6 @@
 //        }
 //        socket.emit('my other event', { my: 'data' });
     });
-
 </script>
 </body>
 </html>

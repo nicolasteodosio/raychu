@@ -89,6 +89,7 @@ body {
     padding-left: 10px;
     padding-right: 10px;
     margin-right: -10px;
+    border: 1px black solid;
     border-right: 9px black solid;
     margin-top: 15px;
     -moz-border-radius: 10px; /* Para Firefox */
@@ -98,4 +99,26 @@ body {
 
 .menu-item:hover {
     background-color: lightgreen;
+}
+
+.sub-menu-item {
+    background-color: #aaaaaa;
+    padding-top: 4px;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-right: -10px;
+    border: 1px black solid;
+    border-right: 9px black solid;
+    margin-top: 15px;
+    margin-left: 30px;
+    height: 42px;
+    font-size: 12px;
+    -moz-border-radius: 10px; /* Para Firefox */
+    -webkit-border-radius: 10px; /*Para Safari e Chrome */
+    border-radius: 10px; /* Para Opera 10.5+*/
+}
+
+.sub-menu-item:hover{
+    background-color: #17b555;
 }
