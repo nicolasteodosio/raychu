@@ -65,11 +65,11 @@
 
 <script type="template/text" id="new-job">
     <div onclick="showHide(this);" style="cursor: pointer; cursor: hand; ">
-        <h3 class="job-name"><%= process.title %><br>
+        <h3 class="job-name"><%= process.titulo %><br>
                 <span class="btn-xs job-item-value"><%= process.solicitante %></span>
         </h3>
     <div class="progress progress-striped active">
-            <div class="progress-bar" role="progressbar" style="width: <%= parseInt(process.atual)/parseInt(process.total)*100 %>%">
+            <div class="progress-bar" role="progressbar" style="width: <%= parseInt(process.passo_atual)/parseInt(process.total)*100 %>%">
             </div>
         </div>
     </div>
@@ -80,14 +80,14 @@
             <br>Solicitante: <span class="job-item-value"> <%= process.solicitante %></span>
             <br>Data Inicio: <span class="job-item-value"> <%= process.data_inicio%> </span>
             <br>Data Termino: <span class="job-item-value"> <%= process.data_fim %> </span>
-            <br>Passo <%= process.passo_atual %>: <span class="job-item-value" id="passo"> <%= process.passo_atual %> </span>
+            <br>Passo <%= process.passo_atual %>: <span class="job-item-value" id="passo"> <%= process.passo_msg %> </span>
         </div>
         <div class="col-lg-3 text-right">
             Andamento: <span class="job-item-value"> <%= parseInt(process.passo_atual)/parseInt(process.total)*100 %>%</span>
             <br>Velocidade: <span class="job-item-value" id="velocidade"> <%= process.velocidade %></span>
-            <br>Passo Atual: <span class="job-item-value" id="atual"><%= process.atual%></span>
+            <br>Passo Atual: <span class="job-item-value" id="atual"><%= process.passo_atual%></span>
             <br>Total passos: <span class="job-item-value" id="total"><%= process.total%></span>
-            <br>Faltam: <span class="job-item-value" id="faltam"><%= parseInt(process.total) - parseInt(process.atual) %></span>
+            <br>Faltam: <span class="job-item-value" id="faltam"><%= parseInt(process.total) - parseInt(process.passo_atual) %></span>
             <br>Termina em: <span class="job-item-value" id="termina_em"><%= process.termina_em %></span>
         </div>
     </div>
