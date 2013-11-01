@@ -152,6 +152,7 @@
 
     all_jobs = [];
     list_jobs = [];
+    allProcess = [];
     $('.jobs-all').fadeIn();
 
 
@@ -178,6 +179,8 @@
     };
 
     update_or_create_job = function(all_jobs){
+        allProcess = all_jobs;
+
         _.each(all_jobs, function(new_job){
 
             var html = template_new_job({process: new_job, progress_bar_style: progress_bar_style[new_job.status]});
@@ -202,9 +205,6 @@
         });
     };
 
-
-
-
     showHide = function (elemento) {
         $(elemento).next('div').fadeToggle("fast");
     };
@@ -216,8 +216,6 @@
     hideShowRight = function () {
         $("#sidebar-right").toggle();
     };
-
-
 </script>
 
 <script>
