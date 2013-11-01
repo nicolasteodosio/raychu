@@ -13,6 +13,7 @@ PORT = 8080;
 
 var process = {};
 
+var moment = require('moment');
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
@@ -32,6 +33,28 @@ app.post('/process', function(request, response) {
         processId = new Date().getTime() + Math.floor((Math.random()*10)+1);
 
     json.id = processId;
+    json.data_inicio = moment();
+    json.data_fim = null ;
+
+    if(json.passos === undefined){
+        json.passos = -1;
+    }
+
+    if(json.passo_atual === undefined){
+        json.passo_atual = 0;
+    }
+
+    if(json.passo_msg === undefined){
+        json.passo_msg = "Iniciando processo";
+    }
+
+    if(json.titulo === undefined){
+        json.titulo = "Processo ["+ json.id+"]";
+    }
+
+    if(json.status === undefined){
+        json.status = STARTED;
+    }
 
     process[processId] = json;
     response.send(json);

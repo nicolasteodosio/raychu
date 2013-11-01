@@ -75,15 +75,15 @@
     </div>
     <div class="box-info alert-cinza col-lg-12 ">
         <div class="col-lg-9">
-            Cliente: <span class="job-item-value"><%= process.customer %></span>
-            <br>Cliente-ID: <span class="job-item-value"><%= process.customer_id %></span>
+            Cliente: <span class="job-item-value"><%= process.cliente %></span>
+            <br>Cliente-ID: <span class="job-item-value"><%= process.cliente_id %></span>
             <br>Solicitante: <span class="job-item-value"> <%= process.solicitante %></span>
             <br>Data Inicio: <span class="job-item-value"> <%= process.data_inicio%> </span>
-            <br>Data Termino: <span class="job-item-value"> <%= process.data_termino %> </span>
-            <br>Passo <%= process.step %>: <span class="job-item-value" id="passo"> <%= process.step %> </span>
+            <br>Data Termino: <span class="job-item-value"> <%= process.data_fim %> </span>
+            <br>Passo <%= process.passo_atual %>: <span class="job-item-value" id="passo"> <%= process.passo_atual %> </span>
         </div>
         <div class="col-lg-3 text-right">
-            Andamento: <span class="job-item-value"> <%= parseInt(process.atual)/parseInt(process.total)*100 %>%</span>
+            Andamento: <span class="job-item-value"> <%= parseInt(process.passo_atual)/parseInt(process.total)*100 %>%</span>
             <br>Velocidade: <span class="job-item-value" id="velocidade"> <%= process.velocidade %></span>
             <br>Passo Atual: <span class="job-item-value" id="atual"><%= process.atual%></span>
             <br>Total passos: <span class="job-item-value" id="total"><%= process.total%></span>
@@ -105,18 +105,23 @@
 <script>
     var template_new_job = _.template($('#new-job').html());
 
-    fake_job = { 'id': 162532134165234,
-        'title': 'Criar tag em grupo de tags ja existentii',
-        'customer': 'FIVE IMPORTS COM. IMP & EXP. LTDA - ME - Buscapé',
-        'customer_id': '1135',
-        'velocidade': '10/s',
-        'data_inicio': '10/10/2013 às 15:43:21',
-        'data_termino': '10/10/2013 às 15:43:21',
-        'passo': 'Preparando Backup',
+    fake_job = {
+        // Campos com regra de negocio do cliente
+        'cliente': 'FIVE IMPORTS COM. IMP & EXP. LTDA - ME - Buscapé',
+        'cliente_id': '1135',
         'solicitante': 'Taina Rocha',
+        // Campos Calculados pela Tela
+        'velocidade': '10/s',
         'termina_em': '39 min',
-        'step': '30',
-        'total': '50000'
+        // Campos obrigatorios pelo app.js
+        'id': 162532134165234,
+        'titulo': 'Criar tag em grupo de tags ja existentii',
+        'data_inicio': '10/10/2013 às 15:43:21',
+        'data_fim': '10/10/2013 às 15:43:21',
+        'passo_msg': 'Preparando Backup',
+        'passo_atual': '30',
+        'total': '50000',
+        'status': 1
     };
 
     all_jobs = [];
