@@ -48,16 +48,16 @@ body {
 .box-info {
     min-height: 140px;
     padding: 8px;
+    box-shadow: 2px 2px 7px #888;
 }
 
 #sidebar-left, sidebar-right {
-    background-color: #999999;
     position: fixed;
     top: 0;
     height: 100%;
     width: 230px;
     padding-top: 100px;
-    padding-left: 30px;
+    padding-left: 20px;
 }
 
 #sidebar-right {
@@ -70,6 +70,7 @@ body {
     top: 0;
     height: 100%;
     width: 20px;
+    box-shadow: 1px 1px 1px #888;
 }
 
 #sidebar-right-pop {
@@ -78,6 +79,7 @@ body {
 
 #sidebar-left-pop {
     left: 0px;
+    box-shadow: 1px 1px 1px #888;
 }
 
 .open-right {
@@ -89,7 +91,7 @@ body {
 }
 
 .menu-item {
-    background-color: #aaaaaa;
+    background-color: #cccccc;
     padding-top: 20px;
     padding-bottom: 20px;
     padding-left: 10px;
@@ -101,14 +103,15 @@ body {
     -moz-border-radius: 10px; /* Para Firefox */
     -webkit-border-radius: 10px; /*Para Safari e Chrome */
     border-radius: 10px; /* Para Opera 10.5+*/
+    box-shadow: 10px 10px 5px #888;
 }
 
 .menu-item:hover {
-    background-color: lightgreen;
+    background-color: #5cb85c;
 }
 
 .sub-menu-item {
-    background-color: #aaaaaa;
+    background-color: #cccccc;
     padding-top: 4px;
     padding-bottom: 20px;
     padding-left: 10px;
@@ -123,6 +126,7 @@ body {
     -moz-border-radius: 10px; /* Para Firefox */
     -webkit-border-radius: 10px; /*Para Safari e Chrome */
     border-radius: 10px; /* Para Opera 10.5+*/
+    box-shadow: 10px 10px 5px #888;
 }
 
 .sub-menu-item:hover{

@@ -17,7 +17,7 @@ mockProcess = function(n) {
                 // data_inicio: '10/10/2013 às 15:43:21',
                 // data_fim: '10/10/2013 às 15:43:21',
                 id: 162532134165234,
-                titulo: 'Criar tag em grupo de tags ja existentii',
+                titulo: 'Criar tag em grupo de tags já existente',
                 passo_msg: 'Preparando Backup',
                 passo_atual: Math.floor((Math.random()*49)+1),
                 passo_total: Math.floor((Math.random()*100)+50),
@@ -27,7 +27,7 @@ mockProcess = function(n) {
         i++;
     };
 }
-mockProcess(2)
+//mockProcess(2)
 
 finishProcess = function(process) {
     i = process.passo_atual;
