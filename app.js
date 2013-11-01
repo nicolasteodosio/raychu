@@ -89,6 +89,7 @@ app.post(/^\/process\/(\d+)\/next$/, function(request, response){
         process[id]['status'] = FINISHED;
         process[id]['data_fim'] = moment().format(MOMENT_DATETIME_STRING);
         process[id]['data_duracao'] = moment(process[id]['data_fim'], MOMENT_DATETIME_STRING).from(moment(process[id]['data_inicio'], MOMENT_DATETIME_STRING));
+        socket.emit('finish', process[id]);
     }
     else{
         process[id]['status'] = RUNNING;
