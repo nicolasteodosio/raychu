@@ -67,8 +67,8 @@
     </div>
 </div>
 <div id="sidebar-left-pop" onclick="hideShowLeft();"></div>
-<!--<div id="sidebar-right" style="display: none;"></div>-->
-<!--<div id="sidebar-right-pop" onclick="hideShowRight();"></div>-->
+<div id="sidebar-right" style="display: none;"></div>
+<div id="sidebar-right-pop" onclick="hideShowRight();"></div>
 
 
 <script type="template/text" id="new-sub-menu-item">
@@ -132,6 +132,7 @@
 <script src="./pykachu/js/mock.js"></script>
 <script src="./pykachu/js/moment.js"></script>
 <script src="./pykachu/js/lang/pt-br.js"></script>
+<script src="./pykachu/js/milkNotification.js"></script>
 
 <script>
     moment.lang('pt-br');
@@ -267,15 +268,17 @@
     jaNotificadas = [];
 
     showNotification = function(data){
+        mensagem = data.titulo + ' foi finalizado com sucesso';
         fim = data.data_fim || 'Agora';
         duracao = data.data_duracao || 'Velocidade da Luz';
         if (!_.contains(jaNotificadas, data.id)){
             jaNotificadas.push(data.id);
             $("#container").notify("create", {
-                title: data.titulo + ' foi finalizado com sucesso',
+                title: mensagem,
                 data_fim: 'Terminou em: ' + fim,
                 data_duracao: 'Duração: ' + duracao
             });
+            MilkNotification(mensagem);
         }
     }
 </script>
