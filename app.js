@@ -15,13 +15,14 @@ MOMENT_DATETIME_STRING = "DD/MM/YYYY HH:mm:ss";
 var process = {};
 
 var moment = require('moment');
-moment.lang('pt-br');
+moment.locale('pt-br');
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server, {log: false });
+var bodyParser = require('body-parser');
 app.use(express.static(__dirname + '/client'));
-app.use(express.bodyParser());
+app.use(bodyParser);
 
 server.listen(PORT);
 

@@ -10,7 +10,8 @@
     "express" : "",
     "socket.io" : "",
     "moment" : "",
-    "redis" : ""
+    "redis" : "",
+    "body-parser": ""
 		   }
 		   
 }
