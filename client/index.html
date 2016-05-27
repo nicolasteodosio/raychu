@@ -87,7 +87,7 @@
         </div>
     </div>
     <div class="box-info alert-cinza col-lg-12 ">
-        <div class="col-lg-9">
+        <div class="col-lg-8">
             Passo <%= process.passo_atual %>: <span class="job-item-value" id="passo"> <%= process.passo_msg %> </span>
             <br>Cliente: <span class="job-item-value"><%= process.cliente %></span>
             <br>Cliente-ID: <span class="job-item-value"><%= process.cliente_id %></span>
@@ -99,7 +99,7 @@
             <br>Tempo de Execução: <span class="job-item-value" id="termina_em"><%= process.data_duracao %></span>
             <% } %>
         </div>
-        <div class="col-lg-3 text-right">
+        <div class="col-lg-4 text-right">
             %: <span class="job-item-value"> <%= (parseInt(process.passo_atual)/parseInt(process.passo_total)*100).toFixed(2) %>%</span>
             <br>Velocidade: <span class="job-item-value" id="velocidade"><%= typeof(process.velocidade)!== 'undefined' ?  process.velocidade.toFixed(2) : 0 %> /s</span>
             <br>Passo Atual: <span class="job-item-value" id="atual"><%= process.passo_atual%></span>
