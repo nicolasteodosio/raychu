@@ -319,7 +319,6 @@
 
         obj.passo_total = data.total;
         if (!_.findWhere(list_jobs_pykachu_antigo, {id: obj.id})){
-            console.log('achie');
             list_jobs_pykachu_antigo.push(obj);
             if(obj.passo_atual == obj.passo_total){
                 jaNotificadas.push(obj.id);
