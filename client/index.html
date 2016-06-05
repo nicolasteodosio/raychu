@@ -1,139 +1,162 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="./bootstrap/assets/ico/favicon.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Pykachu 2.0</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="AdminLTE-2.3.3/dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="AdminLTE-2.3.3/dist/css/skins/_all-skins.min.css">
 
-    <title>Pykachu 2.0 - The Raychu</title>
+<body class="skin-blue sidebar-mini sidebar-collapse">
+<div class="wrapper">
 
-    <link href="./bootstrap/css/bootstrap.css" rel="stylesheet">
-    <link href="./bootstrap/css/jquery-ui-1.10.3.custom.min.css" rel="stylesheet">
-    <link href="./bootstrap/css/ui.notify.css" rel="stylesheet">
-    <link href="./pykachu/css/pykachu2.css" rel="stylesheet">
+    <header class="main-header">
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="./bootstrap/assets/js/html5shiv.js"></script>
-    <script src="./bootstrap/assets/js/respond.min.js"></script>
-    <![endif]-->
-</head>
+        <!-- Logo -->
+        <a href="../index2.html" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><b>A</b>LT</span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><b>Admin</b>LTE</span>
+        </a>
 
-<body>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- User Account: style can be found in dropdown.less -->
+                    <li class="user user-menu">
+                        <span class="hidden-xs" id="box-user">Usuario</span>
 
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Raychu</a>
-        </div>
-        <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Admin</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="active" id="box-user"><a href="#">Usuario</a></li>
-            </ul>
-        </div>
-        <!--/.nav-collapse -->
-    </div>
-</div>
-
-<div class="container">
-    <ul class="jobs-all unstyled">
-    </ul>
-</div>
-<div id="sidebar-left" style="display: none;">
-    <div class="menu-item" onclick="ativar_filtro('todos');">
-        Todos
-    </div>
-    <div class="menu-item" onclick="ativar_filtro('meus_processos');">
-        Meus processos
-    </div>
-    <div class="menu-item" onclick="ativar_filtro('em_execucao');">
-        Ainda em execução
-    </div>
-    <div class="menu-item" onclick="ativar_filtro('finalizados');">
-        Finalizados
-    </div>
-    <div class="menu-item" onclick="ativar_filtro('meus_processos');">
-        Por tipo de Tarefa
-    </div>
-</div>
-<div id="sidebar-left-pop" onclick="hideShowLeft();"></div>
-<div id="sidebar-right" style="display: none;"></div>
-<div id="sidebar-right-pop" onclick="hideShowRight();"></div>
-
-
-<script type="template/text" id="new-sub-menu-item">
-    <div class="sub-menu-item" onclick="ativar_filtro_titulo('<%= nome %>');">
-        <%= nome %>
-    </div>
-</script>
-<script type="template/text" id="new-job">
-    <div style="cursor: pointer; cursor: hand; ">
-        <h3 class="job-name"><%= process.titulo %><br>
-            <span class="btn-xs job-item-value"><%= process.solicitante %></span>
-        </h3>
-        <div class="progress progress-striped">
-            <div class="progress-bar <%= progress_bar_style %>" role="progressbar" style="width: <%= parseInt(process.passo_atual)/parseInt(process.passo_total)*100 %>%">
+                    </li>
+                    <!-- Control Sidebar Toggle Button -->
+                </ul>
             </div>
-        </div>
-    </div>
-    <div class="box-info alert-cinza col-lg-12 ">
-        <div class="col-lg-8">
-            Passo <%= process.passo_atual %>: <span class="job-item-value" id="passo"> <%= process.passo_msg %> </span>
-            <br>Cliente: <span class="job-item-value"><%= process.cliente %></span>
-            <br>Cliente-ID: <span class="job-item-value"><%= process.cliente_id %></span>
-            <br>Data Inicio: <span class="job-item-value"> <%= process.data_inicio%> </span>
-            <% if(process.data_duracao === undefined){ %>
-            <br>Termina em: <span class="job-item-value" id="termina_em"><%= process.termina_em %></span>
-            <% } else { %>
-            <br>Data Termino: <span class="job-item-value"> <%= process.data_fim %> </span>
-            <br>Tempo de Execução: <span class="job-item-value" id="termina_em"><%= process.data_duracao %></span>
-            <% } %>
-        </div>
-        <div class="col-lg-4 text-right">
-            %: <span class="job-item-value"> <%= (parseInt(process.passo_atual)/parseInt(process.passo_total)*100).toFixed(2) %>%</span>
-            <br>Velocidade: <span class="job-item-value" id="velocidade"><%= typeof(process.velocidade)!== 'undefined' ?  process.velocidade.toFixed(2) : 0 %> /s</span>
-            <br>Passo Atual: <span class="job-item-value" id="atual"><%= process.passo_atual%></span>
-            <br>Total passos: <span class="job-item-value" id="total"><%= process.passo_total%></span>
-            <br>Faltam: <span class="job-item-value" id="faltam"><%= parseInt(process.passo_total) - parseInt(process.passo_atual) %></span>
-        </div>
-    </div>
-</script>
 
-<!-- Template da app de notificação -->
-<div id="container" style="display:none">
-    <div id="basic-template">
-        <a class="ui-notify-cross ui-notify-close" href="#">x</a>
-        <h1>#{title}</h1>
-        <p>#{data_fim}</p>
-        <p>#{data_duracao}</p>
+        </nav>
+    </header>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar" style="height: auto;">
+
+
+            <!-- /.search form -->
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu">
+                <li class="header">Filtros</li>
+                <li class="treeview active">
+                    <a href="#" onclick="ativar_filtro('todos');">
+                        <i class="fa fa-users"></i> <span>Todos os processos</span> <i
+                            class="fa fa-angle-left pull-right"></i>
+                    </a>
+                </li>
+                <li class="treeview">
+                    <a href="#" onclick="ativar_filtro('meus_processos');">
+                        <i class="fa fa-user"></i> <span>Meus processos</span> <i
+                            class="fa fa-angle-left pull-right"></i>
+                    </a>
+                </li>
+                <li class="treeview">
+                    <a href="#" onclick="ativar_filtro('em_execucao');">
+                        <i class="fa fa-play-circle-o"></i> <span>Em execução</span> <i
+                            class="fa fa-angle-left pull-right"></i>
+                    </a>
+                </li>
+                <li class="treeview">
+                    <a href="#" onclick="ativar_filtro('finalizados');">
+                        <i class="fa fa-stop-circle-o"></i> <span>Finalizados</span> <i
+                            class="fa fa-angle-left pull-right"></i>
+                    </a></li>
+                >
+            </ul>
+        </section>
+        >
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content">
+            <script type="template/text" id="new-job">
+                <div class="row">
+                    <!-- Left col -->
+                    <div class="col-md-6">
+                        <!-- MAP & BOX PANE -->
+                        <div class="box box-success">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><%= process.titulo %> - <%= process.solicitante %></h3>
+
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                            class="fa fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                                            class="fa fa-times"></i></button>
+                                </div>
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body no-padding">
+                                <div class="row">
+                                    <div class="col-md-9 ">
+                                        <div class="pad">
+                                            <div class="progress-group">
+                                                <div class="progress sm">
+                                                    <div class="progress-bar <%= progress_bar_style %>"
+                                                         style="width: <%= parseInt(process.passo_atual)/parseInt(process.passo_total)*100 %>%"></div>
+                                                </div>
+                                                <span class="progress-text"><%= process.passo_msg %></span>
+                                                <span class="progress-number"><b><%= process.passo_atual %></b>/%= process.passo_total%></span><br>
+                                                <span class="progress-text"><b>Velocidade: </b><%= typeof(process.velocidade)!== 'undefined' ?  process.velocidade.toFixed(2) : 0 %> /s</span><br>
+                                                <span class="progress-text"><b>Data inicio: </b> <%= process.data_inicio %></span><br>
+                                                <span class="progress-text"><b>Cliente: </b> <%= process.cliente %></span>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </script>
+        </section>
     </div>
+
+    <!-- /.row -->
+    <!-- /.content -->
 </div>
 
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="./bootstrap/js/jquery-1.10.1.min.js"></script>
-<script src="./bootstrap/js/jquery-ui-1.10.3.custom.min.js"></script>
-<script src="./bootstrap/js/jquery.notify.js"></script>
+<!-- jQuery 2.2.0 -->
+<script src="AdminLTE-2.3.3/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="AdminLTE-2.3.3/bootstrap/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="AdminLTE-2.3.3/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="AdminLTE-2.3.3/dist/js/app.min.js"></script>
 <script src="./bootstrap/js/bootstrap.min.js"></script>
 <script src="./bootstrap/js/underscore.min.js"></script>
 <script src="./pykachu/js/socket.io.js"></script>
 <script src="./pykachu/js/mock.js"></script>
 <script src="./pykachu/js/moment.js"></script>
 <script src="./pykachu/js/lang/pt-br.js"></script>
-<script src="./pykachu/js/milkNotification.js"></script>
-
 <script>
     moment.lang('pt-br');
 
@@ -141,14 +164,14 @@
     var template_new_sub_menu_item = _.template($('#new-sub-menu-item').html());
 
     // Variavel externa
-    usuario = 'Joao Leite';
+    var usuario = 'Joao Leite';
 
     // Status dos jobs
-    STARTED = 1;
-    RUNNING = 2;
-    ERROR = 3;
-    FINISHED = 0;
-    progress_bar_style = [];
+    var STARTED = 1;
+    var RUNNING = 2;
+    var ERROR = 3;
+    var FINISHED = 0;
+    var progress_bar_style = [];
 
     // Status da barra de progresso
     progress_bar_style[RUNNING] = 'progress-bar-info';
@@ -162,69 +185,68 @@
     progress_bar_style['Finish'] = 'progress-bar-success';
 
     // Tipos de Filtros personalizados
-    filtro = {};
-    meus_processos = { solicitante: usuario };
-    finalizados = { status: FINISHED };
-    em_execucao = { status: RUNNING };
-    titulos = {};
-    todos = {};
+    var filtro = {};
+    var meus_processos = {solicitante: usuario};
+    var finalizados = {status: FINISHED};
+    var em_execucao = {status: RUNNING};
+    var titulos = {};
+    var todos = {};
 
 
-    all_jobs = [];
-    list_jobs = [];
-    allProcess = [];
+    var all_jobs = [];
+    var list_jobs = [];
+    var allProcess = [];
     $('.jobs-all').fadeIn();
 
 
+    $('#box-user').html(usuario);
 
-    $('#box-user > a').html(usuario);
-
-    ativar_filtro = function (tipo_filtro) {
+     function ativar_filtro (tipo_filtro) {
         filtro = eval(tipo_filtro);
         $('.jobs-all').html('');
         list_jobs = [];
         allProcess = [];
-    };
+    }
 
-    ativar_filtro_titulo = function(titulo){
+     function  ativar_filtro_titulo(titulo) {
         titulos = {titulo: titulo};
         ativar_filtro('titulos');
-    };
+    }
 
-    filter_process = function(all_jobs){
-        if(_.size(filtro) > 0){
+    function filter_process(all_jobs) {
+        if (_.size(filtro) > 0) {
             return _.where(all_jobs, filtro);
-        }else{
+        } else {
             return all_jobs;
         }
-    };
+    }
 
-    update_or_create_job = function(all_jobs){
+    function update_or_create_job(all_jobs) {
         all_jobs = _.compact(all_jobs);
 
-        _.each(all_jobs, function(new_job){
+        _.each(all_jobs, function (new_job) {
 
             var html = template_new_job({process: new_job, progress_bar_style: progress_bar_style[new_job.status]});
 
-            if (new_job.id == '1383319610.25'){
+            if (new_job.id == '1383319610.25') {
                 console.log(new_job.passo_atual);
             }
 
             indexOfJob = _.indexOf(allProcess, new_job.id);
 
 
-            if (indexOfJob == -1){
+            if (indexOfJob == -1) {
                 $('<li/>', {
                     'class': 'job-item',
-                    'id': 'job_'+new_job.id,
+                    'id': 'job_' + new_job.id,
                     html: html
                 }).appendTo('.jobs-all');
                 allProcess.push(new_job.id);
             }
-            else{
-                li_atual = $('#job_'+new_job.id);
+            else {
+                li_atual = $('#job_' + new_job.id);
 
-                if(li_atual.html() != html){
+                if (li_atual.html() != html) {
                     li_atual.html(html);
                 }
             }
@@ -247,7 +269,6 @@
     $("#container").notify();
 
 </script>
-
 <script>
     var socket = io.connect('http://localhost:8080');
     socket.on('news', function (data) {
@@ -256,23 +277,23 @@
         titulos = _.uniq(_.pluck(data, 'titulo'));
         $('.sub-menu-item').remove();
 
-        _.each(titulos, function(titulo){
+        _.each(titulos, function (titulo) {
             var html = template_new_sub_menu_item({nome: titulo});
             $('#sidebar-left').append(html);
         });
     });
 
-    socket.on('finish', function(data) {
+    socket.on('finish', function (data) {
         showNotification(data);
     });
 
     jaNotificadas = [];
 
-    showNotification = function(data){
+    showNotification = function (data) {
         mensagem = data.titulo + ' foi finalizado com sucesso';
         fim = data.data_fim || 'Agora';
         duracao = data.data_duracao || 'Velocidade da Luz';
-        if (!_.contains(jaNotificadas, data.id)){
+        if (!_.contains(jaNotificadas, data.id)) {
             jaNotificadas.push(data.id);
             $("#container").notify("create", {
                 title: mensagem,
@@ -286,7 +307,7 @@
 <script>
     list_jobs_pykachu_antigo = [];
     var socket = io.connect("http://hughes.sieve.com.br:8080");
-    socket.on('pykachu', function(data) {
+    socket.on('pykachu', function (data) {
 
         list_jobs_pykachu_antigo = _.compact(list_jobs_pykachu_antigo);
 
@@ -295,7 +316,7 @@
         obj.passo_msg = data.last_item;
         obj.titulo = data.name;
         obj.data_inicio = data.start_at;
-        switch (data.state){
+        switch (data.state) {
             case 'Finish':
                 obj.status = FINISHED;
                 break;
@@ -318,16 +339,16 @@
         obj.passo_atual = data.steps;
 
         obj.passo_total = data.total;
-        if (!_.findWhere(list_jobs_pykachu_antigo, {id: obj.id})){
+        if (!_.findWhere(list_jobs_pykachu_antigo, {id: obj.id})) {
             list_jobs_pykachu_antigo.push(obj);
-            if(obj.passo_atual == obj.passo_total){
+            if (obj.passo_atual == obj.passo_total) {
                 jaNotificadas.push(obj.id);
             }
         } else {
             newObj = _.findWhere(list_jobs_pykachu_antigo, {id: obj.id});
             index = _.indexOf(list_jobs_pykachu_antigo, newObj);
             list_jobs_pykachu_antigo[index] = obj;
-            if(obj.passo_atual == obj.passo_total){
+            if (obj.passo_atual == obj.passo_total) {
                 showNotification(obj);
             }
         }

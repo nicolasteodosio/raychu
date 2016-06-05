@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="./bootstrap/assets/ico/favicon.png">
+
+    <title>Pykachu 2.0 - The Raychu</title>
+
+    <link href="client/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="client/bootstrap/css/jquery-ui-1.10.3.custom.min.css" rel="stylesheet">
+    <link href="client/bootstrap/css/ui.notify.css" rel="stylesheet">
+    <link href="client/pykachu/css/pykachu2.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="./bootstrap/assets/js/html5shiv.js"></script>
+    <script src="./bootstrap/assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Raychu</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Admin</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active" id="box-user"><a href="#">Usuario</a></li>
+            </ul>
+        </div>
+        <!--/.nav-collapse -->
+    </div>
+</div>
+
+<div class="container">
+    <ul class="jobs-all unstyled">
+    </ul>
+</div>
+<div id="sidebar-left" style="display: none;">
+    <div class="menu-item" onclick="ativar_filtro('todos');">
+        Todos
+    </div>
+    <div class="menu-item" onclick="ativar_filtro('meus_processos');">
+        Meus processos
+    </div>
+    <div class="menu-item" onclick="ativar_filtro('em_execucao');">
+        Ainda em execução
+    </div>
+    <div class="menu-item" onclick="ativar_filtro('finalizados');">
+        Finalizados
+    </div>
+    <div class="menu-item" onclick="ativar_filtro('meus_processos');">
+        Por tipo de Tarefa
+    </div>
+</div>
+<div id="sidebar-left-pop" onclick="hideShowLeft();"></div>
+<div id="sidebar-right" style="display: none;"></div>
+<div id="sidebar-right-pop" onclick="hideShowRight();"></div>
+
+
+<script type="template/text" id="new-sub-menu-item">
+    <div class="sub-menu-item" onclick="ativar_filtro_titulo('<%= nome %>');">
+        <%= nome %>
+    </div>
+</script>
+<script type="template/text" id="new-job">
+    <div style="cursor: pointer; cursor: hand; ">
+        <h3 class="job-name"><%= process.titulo %><br>
+            <span class="btn-xs job-item-value"><%= process.solicitante %></span>
+        </h3>
+        <div class="progress progress-striped">
+            <div class="progress-bar <%= progress_bar_style %>" role="progressbar" style="width: <%= parseInt(process.passo_atual)/parseInt(process.passo_total)*100 %>%">
+            </div>
+        </div>
+    </div>
+    <div class="box-info alert-cinza col-lg-12 ">
+        <div class="col-lg-8">
+            Passo <%= process.passo_atual %>: <span class="job-item-value" id="passo"> <%= process.passo_msg %> </span>
+            <br>Cliente: <span class="job-item-value"><%= process.cliente %></span>
+            <br>Cliente-ID: <span class="job-item-value"><%= process.cliente_id %></span>
+            <br>Data Inicio: <span class="job-item-value"> <%= process.data_inicio%> </span>
+            <% if(process.data_duracao === undefined){ %>
+            <br>Termina em: <span class="job-item-value" id="termina_em"><%= process.termina_em %></span>
+            <% } else { %>
+            <br>Data Termino: <span class="job-item-value"> <%= process.data_fim %> </span>
+            <br>Tempo de Execução: <span class="job-item-value" id="termina_em"><%= process.data_duracao %></span>
+            <% } %>
+        </div>
+        <div class="col-lg-4 text-right">
+            %: <span class="job-item-value"> <%= (parseInt(process.passo_atual)/parseInt(process.passo_total)*100).toFixed(2) %>%</span>
+            <br>Velocidade: <span class="job-item-value" id="velocidade"><%= typeof(process.velocidade)!== 'undefined' ?  process.velocidade.toFixed(2) : 0 %> /s</span>
+            <br>Passo Atual: <span class="job-item-value" id="atual"><%= process.passo_atual%></span>
+            <br>Total passos: <span class="job-item-value" id="total"><%= process.passo_total%></span>
+            <br>Faltam: <span class="job-item-value" id="faltam"><%= parseInt(process.passo_total) - parseInt(process.passo_atual) %></span>
+        </div>
+    </div>
+</script>
+
+<!-- Template da app de notificação -->
+<div id="container" style="display:none">
+    <div id="basic-template">
+        <a class="ui-notify-cross ui-notify-close" href="#">x</a>
+        <h1>#{title}</h1>
+        <p>#{data_fim}</p>
+        <p>#{data_duracao}</p>
+    </div>
+</div>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="client/bootstrap/js/jquery-1.10.1.min.js"></script>
+<script src="client/bootstrap/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="client/bootstrap/js/jquery.notify.js"></script>
+<script src="client/bootstrap/js/bootstrap.min.js"></script>
+<script src="client/bootstrap/js/underscore.min.js"></script>
+<script src="client/pykachu/js/socket.io.js"></script>
+<script src="client/pykachu/js/mock.js"></script>
+<script src="client/pykachu/js/moment.js"></script>
+<script src="client/pykachu/js/lang/pt-br.js"></script>
+<script src="client/pykachu/js/milkNotification.js"></script>
+
+<script>
+    moment.lang('pt-br');
+
+    var template_new_job = _.template($('#new-job').html());
+    var template_new_sub_menu_item = _.template($('#new-sub-menu-item').html());
+
+    // Variavel externa
+    usuario = 'Joao Leite';
+
+    // Status dos jobs
+    STARTED = 1;
+    RUNNING = 2;
+    ERROR = 3;
+    FINISHED = 0;
+    progress_bar_style = [];
+
+    // Status da barra de progresso
+    progress_bar_style[RUNNING] = 'progress-bar-info';
+    progress_bar_style[STARTED] = 'progress-bar-warning';
+    progress_bar_style[ERROR] = 'progress-bar-danger';
+    progress_bar_style[FINISHED] = 'progress-bar-success';
+    progress_bar_style["Running"] = 'progress-bar-info';
+    progress_bar_style['Waiting'] = 'progress-bar-warning';
+    progress_bar_style['Wainting'] = 'progress-bar-warning';
+    progress_bar_style['Error'] = 'progress-bar-danger';
+    progress_bar_style['Finish'] = 'progress-bar-success';
+
+    // Tipos de Filtros personalizados
+    filtro = {};
+    meus_processos = { solicitante: usuario };
+    finalizados = { status: FINISHED };
+    em_execucao = { status: RUNNING };
+    titulos = {};
+    todos = {};
+
+
+    all_jobs = [];
+    list_jobs = [];
+    allProcess = [];
+    $('.jobs-all').fadeIn();
+
+
+
+    $('#box-user > a').html(usuario);
+
+    ativar_filtro = function (tipo_filtro) {
+        filtro = eval(tipo_filtro);
+        $('.jobs-all').html('');
+        list_jobs = [];
+        allProcess = [];
+    };
+
+    ativar_filtro_titulo = function(titulo){
+        titulos = {titulo: titulo};
+        ativar_filtro('titulos');
+    };
+
+    filter_process = function(all_jobs){
+        if(_.size(filtro) > 0){
+            return _.where(all_jobs, filtro);
+        }else{
+            return all_jobs;
+        }
+    };
+
+    update_or_create_job = function(all_jobs){
+        all_jobs = _.compact(all_jobs);
+
+        _.each(all_jobs, function(new_job){
+
+            var html = template_new_job({process: new_job, progress_bar_style: progress_bar_style[new_job.status]});
+
+            if (new_job.id == '1383319610.25'){
+                console.log(new_job.passo_atual);
+            }
+
+            indexOfJob = _.indexOf(allProcess, new_job.id);
+
+
+            if (indexOfJob == -1){
+                $('<li/>', {
+                    'class': 'job-item',
+                    'id': 'job_'+new_job.id,
+                    html: html
+                }).appendTo('.jobs-all');
+                allProcess.push(new_job.id);
+            }
+            else{
+                li_atual = $('#job_'+new_job.id);
+
+                if(li_atual.html() != html){
+                    li_atual.html(html);
+                }
+            }
+        });
+    };
+
+    showHide = function (elemento) {
+        $(elemento).next('div').fadeToggle("fast");
+    };
+
+    hideShowLeft = function () {
+        $("#sidebar-left").toggle();
+    };
+
+    hideShowRight = function () {
+        $("#sidebar-right").toggle();
+    };
+
+    //    Inicializando o jQuery notify
+    $("#container").notify();
+
+</script>
+
+<script>
+    var socket = io.connect('http://localhost:8080');
+    socket.on('news', function (data) {
+        update_or_create_job(filter_process(data));
+
+        titulos = _.uniq(_.pluck(data, 'titulo'));
+        $('.sub-menu-item').remove();
+
+        _.each(titulos, function(titulo){
+            var html = template_new_sub_menu_item({nome: titulo});
+            $('#sidebar-left').append(html);
+        });
+    });
+
+    socket.on('finish', function(data) {
+        showNotification(data);
+    });
+
+    jaNotificadas = [];
+
+    showNotification = function(data){
+        mensagem = data.titulo + ' foi finalizado com sucesso';
+        fim = data.data_fim || 'Agora';
+        duracao = data.data_duracao || 'Velocidade da Luz';
+        if (!_.contains(jaNotificadas, data.id)){
+            jaNotificadas.push(data.id);
+            $("#container").notify("create", {
+                title: mensagem,
+                data_fim: 'Terminou em: ' + fim,
+                data_duracao: 'Duração: ' + duracao
+            });
+            MilkNotification(mensagem);
+        }
+    }
+</script>
+<script>
+    list_jobs_pykachu_antigo = [];
+    var socket = io.connect("http://hughes.sieve.com.br:8080");
+    socket.on('pykachu', function(data) {
+
+        list_jobs_pykachu_antigo = _.compact(list_jobs_pykachu_antigo);
+
+        obj = {};
+        obj.id = data.id;
+        obj.passo_msg = data.last_item;
+        obj.titulo = data.name;
+        obj.data_inicio = data.start_at;
+        switch (data.state){
+            case 'Finish':
+                obj.status = FINISHED;
+                break;
+            case 'Running':
+                obj.status = RUNNING;
+                break;
+            case 'Waiting' :
+                obj.status = STARTED;
+                break;
+            case 'Wainting' :
+                obj.status = STARTED;
+                break;
+            case 'Error':
+                obj.status = ERROR;
+                break;
+            default :
+                obj.status = RUNNING;
+                break;
+        }
+        obj.passo_atual = data.steps;
+
+        obj.passo_total = data.total;
+        if (!_.findWhere(list_jobs_pykachu_antigo, {id: obj.id})){
+            list_jobs_pykachu_antigo.push(obj);
+            if(obj.passo_atual == obj.passo_total){
+                jaNotificadas.push(obj.id);
+            }
+        } else {
+            newObj = _.findWhere(list_jobs_pykachu_antigo, {id: obj.id});
+            index = _.indexOf(list_jobs_pykachu_antigo, newObj);
+            list_jobs_pykachu_antigo[index] = obj;
+            if(obj.passo_atual == obj.passo_total){
+                showNotification(obj);
+            }
+        }
+
+
+        update_or_create_job(filter_process(list_jobs_pykachu_antigo));
+//
+//            var query_job = jobs.where({key: (data.key) });
+//            var job = null;
+//
+//            if(!query_job.length){
+//                job = new Job(data);
+//                jobs.add(job);
+//                appview.add(job);
+//
+//            } else {
+//                job = query_job[0];
+//                if (data.delete) {
+//                    jobs.remove(job);
+//                } else {
+//                    job.set(data);
+//                }
+//            }
+    });
+</script>
+</body>
+</html>
