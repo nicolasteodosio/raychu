@@ -68,12 +68,12 @@
                             class="fa fa-angle-left pull-right"></i>
                     </a>
                 </li>
-                <li class="treeview">
-                    <a href="#" onclick="ativar_filtro('meus_processos');">
-                        <i class="fa fa-user"></i> <span>Meus processos</span> <i
-                            class="fa fa-angle-left pull-right"></i>
-                    </a>
-                </li>
+                <!--<li class="treeview">-->
+                    <!--<a href="#" onclick="ativar_filtro('meus_processos');">-->
+                        <!--<i class="fa fa-user"></i> <span>Meus processos</span> <i-->
+                            <!--class="fa fa-angle-left pull-right"></i>-->
+                    <!--</a>-->
+                <!--</li>-->
                 <li class="treeview">
                     <a href="#" onclick="ativar_filtro('em_execucao');">
                         <i class="fa fa-play-circle-o"></i> <span>Em execução</span> <i
@@ -163,7 +163,8 @@
     template_new_job = _.template($('#new-job').html());
 
     // Variavel externa
-    usuario = 'Joao Leite';
+    // CRIAR FORMA DE PEGAR USER DA SESSÃO
+    usuario = '';
 
     // Status dos jobs
     STARTED = 1;
