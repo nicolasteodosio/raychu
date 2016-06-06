@@ -12,22 +12,21 @@
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="AdminLTE-2.3.3/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="pykachu/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="AdminLTE-2.3.3/dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="pykachu/css/_all-skins.min.css">
 
-<body class="skin-blue sidebar-mini sidebar-collapse">
+<body class="skin-green sidebar-mini sidebar-collapse">
 <div class="wrapper">
 
     <header class="main-header">
 
         <!-- Logo -->
-        <a href="../index2.html" class="logo">
+        <a class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>A</b>LT</span>
-            <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>Admin</b>LTE</span>
+            <span class="logo-mini"><img src="pykachu/img/pokemon_pokeball-128.png" alt="" style="width: 40px"></span>
+            <span class="logo-lg"><img src="pykachu/img/pokemon_pokeball-128.png" alt="" style="width: 40px"> <b>Pyka</b>chu</span>
         </a>
 
         <!-- Header Navbar: style can be found in header.less -->
@@ -40,9 +39,12 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <!-- User Account: style can be found in dropdown.less -->
-                    <li class="user user-menu">
-                        <span class="hidden-xs" id="box-user">Usuario</span>
-
+                    <li class="user user-menu" id="box-user">
+                                <a>
+                                    Alexander Pierce - Web Developer
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <!-- Control Sidebar Toggle Button -->
                 </ul>
@@ -83,20 +85,27 @@
                         <i class="fa fa-stop-circle-o"></i> <span>Finalizados</span> <i
                             class="fa fa-angle-left pull-right"></i>
                     </a></li>
-                >
+
             </ul>
         </section>
-        >
     </aside>
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <section class="content">
-            <script type="template/text" id="new-job">
-                <div class="row">
-                    <!-- Left col -->
-                    <div class="col-md-6">
-                        <!-- MAP & BOX PANE -->
-                        <div class="box box-success">
+            <div class="row jobs-all">
+
+            </div>
+
+        </section>
+    </div>
+
+    <!-- /.row -->
+    <!-- /.content -->
+</div>
+
+<script type="template/text" id="new-job">
+                    <div>
+                        <div class="box <%= box_style %>">
                             <div class="box-header with-border">
                                 <h3 class="box-title"><%= process.titulo %> - <%= process.solicitante %></h3>
 
@@ -108,10 +117,9 @@
                                             class="fa fa-times"></i></button>
                                 </div>
                             </div>
-                            <!-- /.box-header -->
                             <div class="box-body no-padding">
                                 <div class="row">
-                                    <div class="col-md-9 ">
+                                    <div class="col-md-12 ">
                                         <div class="pad">
                                             <div class="progress-group">
                                                 <div class="progress sm">
@@ -119,12 +127,9 @@
                                                          style="width: <%= parseInt(process.passo_atual)/parseInt(process.passo_total)*100 %>%"></div>
                                                 </div>
                                                 <span class="progress-text"><%= process.passo_msg %></span>
-                                                <span class="progress-number"><b><%= process.passo_atual %></b>/%= process.passo_total%></span><br>
+                                                <span class="progress-number"><b><%= process.passo_atual %></b>/<%= process.passo_total%></span><br>
                                                 <span class="progress-text"><b>Velocidade: </b><%= typeof(process.velocidade)!== 'undefined' ?  process.velocidade.toFixed(2) : 0 %> /s</span><br>
                                                 <span class="progress-text"><b>Data inicio: </b> <%= process.data_inicio %></span><br>
-                                                <span class="progress-text"><b>Cliente: </b> <%= process.cliente %></span>
-
-
                                             </div>
                                         </div>
                                     </div>
@@ -133,45 +138,40 @@
                             </div>
                         </div>
                     </div>
-                </div>
             </script>
-        </section>
-    </div>
-
-    <!-- /.row -->
-    <!-- /.content -->
-</div>
-
 
 <!-- jQuery 2.2.0 -->
-<script src="AdminLTE-2.3.3/plugins/jQuery/jQuery-2.2.0.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
-<script src="AdminLTE-2.3.3/bootstrap/js/bootstrap.min.js"></script>
 <!-- FastClick -->
-<script src="AdminLTE-2.3.3/plugins/fastclick/fastclick.js"></script>
+<script src="pykachu/js/fastclick/fastclick.js"></script>
 <!-- AdminLTE App -->
-<script src="AdminLTE-2.3.3/dist/js/app.min.js"></script>
-<script src="./bootstrap/js/bootstrap.min.js"></script>
-<script src="./bootstrap/js/underscore.min.js"></script>
-<script src="./pykachu/js/socket.io.js"></script>
-<script src="./pykachu/js/mock.js"></script>
-<script src="./pykachu/js/moment.js"></script>
-<script src="./pykachu/js/lang/pt-br.js"></script>
+<script src="bootstrap/js/jquery-1.10.1.min.js"></script>
+<script src="bootstrap/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="bootstrap/js/jquery.notify.js"></script>
+<!--<script src="bootstrap/js/bootstrap.min.js"></script>-->
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="pykachu/js/socket.io.js"></script>
+<script src="pykachu/js/mock.js"></script>
+<script src="pykachu/js/moment.js"></script>
+<script src="pykachu/js/lang/pt-br.js"></script>
+<script src="pykachu/js/milkNotification.js"></script>
+<script src="bootstrap/js/underscore.min.js"></script>
+<script src="bootstrap/js/app.min.js"></script>
 <script>
     moment.lang('pt-br');
 
-    var template_new_job = _.template($('#new-job').html());
-    var template_new_sub_menu_item = _.template($('#new-sub-menu-item').html());
+    template_new_job = _.template($('#new-job').html());
 
     // Variavel externa
-    var usuario = 'Joao Leite';
+    usuario = 'Joao Leite';
 
     // Status dos jobs
-    var STARTED = 1;
-    var RUNNING = 2;
-    var ERROR = 3;
-    var FINISHED = 0;
-    var progress_bar_style = [];
+    STARTED = 1;
+    RUNNING = 2;
+    ERROR = 3;
+    FINISHED = 0;
+    progress_bar_style = [];
+    box_style = [];
 
     // Status da barra de progresso
     progress_bar_style[RUNNING] = 'progress-bar-info';
@@ -183,6 +183,17 @@
     progress_bar_style['Wainting'] = 'progress-bar-warning';
     progress_bar_style['Error'] = 'progress-bar-danger';
     progress_bar_style['Finish'] = 'progress-bar-success';
+
+    // Status da barra de progresso
+    box_style[RUNNING] = 'box-info';
+    box_style[STARTED] = 'box-warning';
+    box_style[ERROR] = 'box-danger';
+    box_style[FINISHED] = 'box-success';
+    box_style["Running"] = 'box-info';
+    box_style['Waiting'] = 'box-warning';
+    box_style['Wainting'] = 'box-warning';
+    box_style['Error'] = 'box-danger';
+    box_style['Finish'] = 'box-success';
 
     // Tipos de Filtros personalizados
     var filtro = {};
@@ -199,16 +210,16 @@
     $('.jobs-all').fadeIn();
 
 
-    $('#box-user').html(usuario);
+    $('#box-user > a').html(usuario);
 
-     function ativar_filtro (tipo_filtro) {
+    function ativar_filtro(tipo_filtro) {
         filtro = eval(tipo_filtro);
         $('.jobs-all').html('');
         list_jobs = [];
         allProcess = [];
     }
 
-     function  ativar_filtro_titulo(titulo) {
+    function ativar_filtro_titulo(titulo) {
         titulos = {titulo: titulo};
         ativar_filtro('titulos');
     }
@@ -225,8 +236,8 @@
         all_jobs = _.compact(all_jobs);
 
         _.each(all_jobs, function (new_job) {
-
-            var html = template_new_job({process: new_job, progress_bar_style: progress_bar_style[new_job.status]});
+            var html = template_new_job({process: new_job, progress_bar_style: progress_bar_style[new_job.status],
+                box_style:box_style[new_job.status]});
 
             if (new_job.id == '1383319610.25') {
                 console.log(new_job.passo_atual);
@@ -236,8 +247,8 @@
 
 
             if (indexOfJob == -1) {
-                $('<li/>', {
-                    'class': 'job-item',
+                $('<div/>', {
+                    'class': 'job-item col-md-6',
                     'id': 'job_' + new_job.id,
                     html: html
                 }).appendTo('.jobs-all');
@@ -251,7 +262,7 @@
                 }
             }
         });
-    };
+    }
 
     showHide = function (elemento) {
         $(elemento).next('div').fadeToggle("fast");
@@ -268,19 +279,9 @@
     //    Inicializando o jQuery notify
     $("#container").notify();
 
-</script>
-<script>
     var socket = io.connect('http://localhost:8080');
     socket.on('news', function (data) {
         update_or_create_job(filter_process(data));
-
-        titulos = _.uniq(_.pluck(data, 'titulo'));
-        $('.sub-menu-item').remove();
-
-        _.each(titulos, function (titulo) {
-            var html = template_new_sub_menu_item({nome: titulo});
-            $('#sidebar-left').append(html);
-        });
     });
 
     socket.on('finish', function (data) {
@@ -302,9 +303,7 @@
             });
             MilkNotification(mensagem);
         }
-    }
-</script>
-<script>
+    };
     list_jobs_pykachu_antigo = [];
     var socket = io.connect("http://hughes.sieve.com.br:8080");
     socket.on('pykachu', function (data) {
